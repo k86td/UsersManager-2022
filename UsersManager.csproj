@@ -177,11 +177,7 @@
   <ItemGroup>
     <Content Include="App_Data\Create Table scripts.txt" />
     <Content Include="App_Data\UsersDB.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\UsersDB_log.ldf">
-      <DependentUpon>UsersDB.mdf</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
