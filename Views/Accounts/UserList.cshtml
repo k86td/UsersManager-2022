@@ -1,0 +1,91 @@
+﻿@model IEnumerable<UsersManager.Models.User>
+
+@{
+    ViewBag.Title = "UserList";
+}
+
+<h2>Liste des usagers</h2>
+
+<table class="table">
+    <tr>
+        <th>En ligne</th>
+        <th>
+            Type
+        </th>
+        <th>
+            Nom
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GenderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </th>
+        <th>
+            Vérifié
+        </th>
+        <th>
+            Bloqué
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (UsersManager.Models.OnlineUsers.IsOnLine(item.Id))
+                {
+                    <span>oui</span>
+                }
+                else
+                {
+                    <span>non</span>
+                }
+            </td>
+            <td>
+                @item.UserType.Name
+            </td>
+            <td>
+                @item.GetFullName()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @item.Gender.Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @if (item.Verified)
+                {
+                    <span>oui</span>
+                }
+                else
+                {
+                    <span>non</span>
+                }
+            </td>
+            <td>
+                @if (item.Blocked)
+                {
+                    <span>oui</span>
+                }
+                else
+                {
+                    <span>non</span>
+                }
+
+            </td>
+            <td>
+                @Html.ActionLink("Effacer", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

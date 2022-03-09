@@ -1,0 +1,42 @@
+﻿CREATE TABLE [dbo].[Users] (
+    	[Id]               INT            IDENTITY (1, 1) NOT NULL,
+    	[UserTypeId]       INT            NOT NULL,
+    	[FirstName]        NVARCHAR (50)  NOT NULL,
+    	[LastName]         NVARCHAR (50)  NOT NULL,
+    	[Email]            NVARCHAR (MAX) NOT NULL,
+    	[Avatar]           NVARCHAR (MAX) NULL,
+    	[GenderId]         INT            NOT NULL,
+    	[Password]         NVARCHAR (50)  NOT NULL,
+    	[CreationDate]     DATETIME       NOT NULL,
+    	[VerificationCode] INT            NOT NULL,
+    	[Verified]         BIT            NOT NULL,
+    	[Blocked]          BIT            NOT NULL,
+    	PRIMARY KEY CLUSTERED ([Id] ASC), 
+    	CONSTRAINT [FK_Users_UserTypes] FOREIGN KEY ([UserTypeId]) REFERENCES [UserTypes]([Id]),
+	CONSTRAINT [FK_Users_Genders] FOREIGN KEY ([GenderId]) REFERENCES [Genders]([Id])
+);
+
+CREATE TABLE [dbo].[UserTypes]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    	[Name] NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE [dbo].[Genders]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    	[Name] NVARCHAR(50) NOT NULL
+)
+
+CREATE TABLE [dbo].[SMTPAccount] (
+    	[Id]            INT            IDENTITY (1, 1) NOT NULL,
+    	[OwnerName]     NVARCHAR (MAX) NOT NULL,
+    	[OwnerEmail]    NVARCHAR (MAX) NOT NULL,
+    	[OwnerPassword] NVARCHAR (50)  NOT NULL,
+    	[Host]          NVARCHAR (MAX) NOT NULL,
+    	[Port]          INT            NOT NULL,
+    	[EnableSSL]     BIT            NOT NULL,
+    	[TimeOut]       INT            NOT NULL,
+	    [Signature]    NVARCHAR (MAX)  NULL,
+    	PRIMARY KEY CLUSTERED ([Id] ASC)
+);
