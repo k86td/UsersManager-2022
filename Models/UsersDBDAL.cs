@@ -44,16 +44,16 @@ namespace UsersManager.Models
                 throw new Exception("Aucune ransaction en cours! Impossible de mettre à jour la base de ddonnées!");
         }
 
-public static bool EmailAvailable(this UsersDBEntities DB, string email, int excludedId = 0)
-{
-    User user = DB.Users.Where(u => u.Email.ToLower() == email.ToLower()).FirstOrDefault();
-    if (user == null)
-        return true;
-    else
-        if (user.Id != excludedId)
-        return user.Email.ToLower() != email.ToLower();
-    return true;
-}
+        public static bool EmailAvailable(this UsersDBEntities DB, string email, int excludedId = 0)
+        {
+            User user = DB.Users.Where(u => u.Email.ToLower() == email.ToLower()).FirstOrDefault();
+            if (user == null)
+                return true;
+            else
+                if (user.Id != excludedId)
+                return user.Email.ToLower() != email.ToLower();
+            return true;
+        }
 
         public static bool EmailExist(this UsersDBEntities DB, string email)
         {
@@ -100,6 +100,7 @@ public static bool EmailAvailable(this UsersDBEntities DB, string email, int exc
             DB.SaveChanges();
             DB.Entry(user).Reference(u => u.Gender).Load();
             DB.Entry(user).Reference(u => u.UserType).Load();
+            OnlineUsers.UpdateUser(user);
             return user;
         }
 

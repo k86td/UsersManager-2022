@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -108,11 +106,20 @@ namespace UsersManager.Models
             }
             return false;
         }
+        public static void UpdateUser(User user)
+        {
+            bool keepCurrentUser = CurrentUser.Id == user.Id;
+            Users.RemoveAll(u => u.Id == user.Id);
+            Users.Add(user);
+            RenewSerialNumber();
+            if (keepCurrentUser)
+                CurrentUser = user;
+        }
         public static bool NeedUpdate()
         {
-            if (HttpContext.Current.Session["User"] == null)
+            if (HttpContext.Current.Session["SerialNumber"] == null)
             {
-                HttpContext.Current.Session["User"] = SerialNumber;
+                HttpContext.Current.Session["SerialNumber"] = SerialNumber;
                 return true;
             }
             string sessionSerialNumber = (string)HttpContext.Current.Session["SerialNumber"];
@@ -124,7 +131,8 @@ namespace UsersManager.Models
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            if (OnlineUsers.GetSessionUser() != null)
+            User user = OnlineUsers.GetSessionUser();
+            if (OnlineUsers.GetSessionUser() != null && !user.Blocked)
                 return true;
             else
             {

@@ -72,20 +72,52 @@
                 }
             </td>
             <td>
-                @if (item.Blocked)
+                @if (!item.IsAdmin)
                 {
-                    <span>oui</span>
+                    if (item.Blocked)
+                    {
+                        <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" checked />
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" />
+                    }
                 }
                 else
                 {
-                    <span>non</span>
+                    <div></div>
                 }
 
             </td>
             <td>
                 @Html.ActionLink("Effacer", "Delete", new { id = item.Id })
+
             </td>
         </tr>
     }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script defer>
+        setInterval(function () { CheckRefresh(); }, 5000);
+        $(".CB_Blocked").change(
+            function () {
+                let userid = this.id.split('_')[1];
+                window.location = "@Url.Action("ChangeUserBlockedStatus")" + "?userid=" + userid + "&blocked=" + this.checked.toString();
+            });
+
+        function CheckRefresh() {
+            $.ajax({
+                url: "@Url.Action("NeedUpdate")",
+                method: 'GET',
+                success: (needUpdate) => {
+                    console.log(needUpdate)
+                    if (needUpdate)
+                        window.location = "@Url.Action("UserList")";
+                }
+            });
+        }
+</script>
+}

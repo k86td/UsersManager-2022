@@ -224,7 +224,7 @@ namespace UsersManager.Controllers
         }
         #endregion
 
-        #region Profi
+        #region Profil
         [UserAccess]
         public ActionResult Profil()
         {
@@ -238,10 +238,6 @@ namespace UsersManager.Controllers
             User currentUser = OnlineUsers.GetSessionUser();
             if (ModelState.IsValid)
             {
-                currentUser.FirstName = user.FirstName;
-                currentUser.LastName = user.LastName;
-                currentUser.GenderId = user.GenderId;
-
                 if (user.Password == "Not Changed")
                 {
                     user.Password = currentUser.Password;
@@ -266,7 +262,7 @@ namespace UsersManager.Controllers
         }
         #endregion
 
-        #region Log
+        #region Login and Logout
         public ActionResult Login()
         {
             return View(new LoginCredential());
@@ -306,10 +302,24 @@ namespace UsersManager.Controllers
         }
         #endregion
 
+
+        public JsonResult NeedUpdate()
+        {
+            return Json(OnlineUsers.NeedUpdate(), JsonRequestBehavior.AllowGet);
+        }
         [AdminAccess]
         public ActionResult UserList()
         {
             return View(DB.Users);
+        }
+
+        [AdminAccess]
+        public ActionResult ChangeUserBlockedStatus(int userid, bool blocked)
+        {
+            User user = DB.FindUser(userid);
+            user.Blocked = blocked;
+            DB.Update_User(user);
+            return RedirectToAction("UserList");
         }
     }
 }
