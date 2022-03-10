@@ -89,10 +89,6 @@
                 }
 
             </td>
-            <td>
-                @Html.ActionLink("Effacer", "Delete", new { id = item.Id })
-
-            </td>
         </tr>
     }
 
@@ -100,15 +96,15 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-<script defer>
-        setInterval(function () { CheckRefresh(); }, 5000);
+    <script defer>
+        setInterval(function () { RefreshIfNeeded(); }, 2000);
         $(".CB_Blocked").change(
             function () {
                 let userid = this.id.split('_')[1];
                 window.location = "@Url.Action("ChangeUserBlockedStatus")" + "?userid=" + userid + "&blocked=" + this.checked.toString();
             });
 
-        function CheckRefresh() {
+    function RefreshIfNeeded() {
             $.ajax({
                 url: "@Url.Action("NeedUpdate")",
                 method: 'GET',
@@ -119,5 +115,5 @@
                 }
             });
         }
-</script>
+    </script>
 }

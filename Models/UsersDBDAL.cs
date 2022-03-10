@@ -104,7 +104,6 @@ namespace UsersManager.Models
             return user;
         }
 
-
         public static User FindUser(this UsersDBEntities DB, int id)
         {
             User user = DB.Users.Find(id);
@@ -112,6 +111,8 @@ namespace UsersManager.Models
             {
                 user.ConfirmEmail = user.Email;
                 user.ConfirmPassword = user.Password;
+                DB.Entry(user).Reference(u => u.Gender).Load();
+                DB.Entry(user).Reference(u => u.UserType).Load();
             }
             return user;
         }
