@@ -8,34 +8,36 @@ namespace UsersManager.Models
 {
     public static class OnlineUsers
     {
-        public static List<User> Users
+        private static List<int> UsersId
         {
             get
             {
                 if (HttpRuntime.Cache["OnLineUsers"] == null)
-                    HttpRuntime.Cache["OnLineUsers"] = new List<User>();
-                return (List<User>)HttpRuntime.Cache["OnLineUsers"];
+                    HttpRuntime.Cache["OnLineUsers"] = new List<int>();
+                return (List<int>)HttpRuntime.Cache["OnLineUsers"];
             }
         }
-        private static User CurrentUser
+        private static int CurrentUserId
         {
             get
             {
                 try
                 {
-                    return (User)HttpContext.Current.Session["User"];
+                    if (HttpContext.Current.Session["UserId"] != null)
+                        return (int)HttpContext.Current.Session["UserId"];
+                    return 0;
                 }
                 catch (Exception)
                 {
-                    return null;
+                    return 0;
                 }
             }
             set
             {
-                if (value != null)
+                if (value != 0)
                 {
                     HttpContext.Current.Session.Timeout = 60;
-                    HttpContext.Current.Session["User"] = value;
+                    HttpContext.Current.Session["UserId"] = value;
                 }
                 else
                 {
@@ -57,64 +59,6 @@ namespace UsersManager.Models
                 HttpRuntime.Cache["OnLineUsersSerialNumber"] = value;
             }
         }
-        private static void RenewSerialNumber()
-        {
-            SerialNumber = Guid.NewGuid().ToString();
-        }
-        public static void AddSessionUser(User user)
-        {
-            if (user != null)
-            {
-                if (Find(user.Id) == null)
-                {
-                    Users.Add(user);
-                    CurrentUser = user;
-                    RenewSerialNumber();
-                }
-            }
-        }
-        public static void RemoveSessionUser()
-        {
-            if (Users != null)
-            {
-                Users.Remove(CurrentUser);
-                CurrentUser = null;
-                RenewSerialNumber();
-            }
-        }
-        public static User GetSessionUser()
-        {
-            return CurrentUser;
-        }
-        public static User Find(int userId)
-        {
-            return Users.Where(u => u.Id == userId).FirstOrDefault();
-        }
-        public static bool CurrentUserIsAdmin()
-        {
-            User user = CurrentUser;
-            if (user != null)
-                return user.IsAdmin;
-            return false;
-        }
-        public static bool IsOnLine(int userId)
-        {
-            foreach (User user in Users)
-            {
-                if (user.Id == userId)
-                    return true;
-            }
-            return false;
-        }
-        public static void UpdateUser(User user)
-        {
-            bool keepCurrentUser = CurrentUser.Id == user.Id;
-            Users.RemoveAll(u => u.Id == user.Id);
-            Users.Add(user);
-            RenewSerialNumber();
-            if (keepCurrentUser)
-                CurrentUser = user;
-        }
         public static bool NeedUpdate()
         {
             if (HttpContext.Current.Session["SerialNumber"] == null)
@@ -125,6 +69,46 @@ namespace UsersManager.Models
             string sessionSerialNumber = (string)HttpContext.Current.Session["SerialNumber"];
             HttpContext.Current.Session["SerialNumber"] = SerialNumber;
             return SerialNumber != sessionSerialNumber;
+        }
+        public static void RenewSerialNumber()
+        {
+            SerialNumber = Guid.NewGuid().ToString();
+        }
+        public static void AddSessionUser(int userId)
+        {
+            if (userId != 0)
+            {
+                if (!UsersId.Contains(userId))
+                {
+                    UsersId.Add(userId);
+                    CurrentUserId = userId;
+                    RenewSerialNumber();
+                }
+            }
+        }
+        public static void RemoveSessionUser()
+        {
+            if (CurrentUserId != 0)
+            {
+                UsersId.Remove(CurrentUserId);
+                CurrentUserId = 0;
+                RenewSerialNumber();
+            }
+        }
+        public static User GetSessionUser()
+        {
+            if (CurrentUserId != 0)
+            {
+                UsersDBEntities DB = new UsersDBEntities();
+                User currentUser = DB.FindUser(CurrentUserId);
+                DB.Dispose();
+                return currentUser;
+            }
+            return null;
+        }
+        public static bool IsOnLine(int userId)
+        {
+            return UsersId.Contains(userId);
         }
     }
     public class UserAccess : AuthorizeAttribute
@@ -137,7 +121,7 @@ namespace UsersManager.Models
             else
             {
                 OnlineUsers.RemoveSessionUser();
-                httpContext.Response.Redirect("~/Accounts/Login");
+                httpContext.Response.Redirect("~/Accounts/Login?message=Acces illegal!");
             }
             return base.AuthorizeCore(httpContext);
         }
@@ -152,7 +136,7 @@ namespace UsersManager.Models
             else
             {
                 OnlineUsers.RemoveSessionUser();
-                httpContext.Response.Redirect("~/Accounts/Login");
+                httpContext.Response.Redirect("~/Accounts/Login?message=Acces illegal!");
             }
             return base.AuthorizeCore(httpContext);
         }

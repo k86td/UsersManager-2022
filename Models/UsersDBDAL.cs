@@ -91,6 +91,7 @@ namespace UsersManager.Models
             DB.SaveChanges();
             DB.Entry(user).Reference(u => u.Gender).Load();
             DB.Entry(user).Reference(u => u.UserType).Load();
+            OnlineUsers.RenewSerialNumber();
             return user;
         }
 
@@ -100,7 +101,7 @@ namespace UsersManager.Models
             DB.SaveChanges();
             DB.Entry(user).Reference(u => u.Gender).Load();
             DB.Entry(user).Reference(u => u.UserType).Load();
-            OnlineUsers.UpdateUser(user);
+            OnlineUsers.RenewSerialNumber();
             return user;
         }
 
@@ -133,6 +134,7 @@ namespace UsersManager.Models
                         DB.UnverifiedEmails.Remove(unverifiedEmail);
                         DB.SaveChanges();
                         Commit();
+                        OnlineUsers.RenewSerialNumber();
                         return true;
                     }
                 }

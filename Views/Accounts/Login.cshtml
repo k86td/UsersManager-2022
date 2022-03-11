@@ -2,8 +2,13 @@
 
 @{
     ViewBag.Title = "Login";
+    string alertMessage = (ViewBag.Message != null ? (string)ViewBag.Message : "");
 }
 
+@if (alertMessage != "")
+{
+    <h3 style="color:red">@alertMessage</h3>
+}
 <hr />
 
 @using (Html.BeginForm())
@@ -27,7 +32,8 @@
     </div>
 }
 @Html.ActionLink("S'enregistrer...", "Subscribe")
-<br /> <br />
+<br />
+<br />
 @Html.ActionLink("Mot de passe oublié...", "ResetPasswordCommand")
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

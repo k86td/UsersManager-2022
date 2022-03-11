@@ -108,7 +108,6 @@
                 url: "@Url.Action("NeedUpdate")",
                 method: 'GET',
                 success: (needUpdate) => {
-                    console.log(needUpdate)
                     if (needUpdate)
                         window.location = "@Url.Action("UserList")";
                 }

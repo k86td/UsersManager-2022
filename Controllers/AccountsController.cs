@@ -249,6 +249,7 @@ namespace UsersManager.Controllers
                     user.Verified = false;
                 }
                 user = DB.Update_User(user);
+                
                 if (!user.Verified)
                 {
                     SendEmailChangedVerification(user);
@@ -263,8 +264,9 @@ namespace UsersManager.Controllers
         #endregion
 
         #region Login and Logout
-        public ActionResult Login()
+        public ActionResult Login(string message)
         {
+            ViewBag.Message = message; 
             return View(new LoginCredential());
         }
 
@@ -275,7 +277,7 @@ namespace UsersManager.Controllers
             {
                 if (DB.EmailBlocked(loginCredential.Email))
                 {
-                    ModelState.AddModelError("Email", "Ce courriel est bloqué");
+                    ModelState.AddModelError("Email", "Ce courriel est bloqué.");
                     return View(loginCredential);
                 }
                 if (!DB.EmailVerified(loginCredential.Email))
@@ -289,7 +291,12 @@ namespace UsersManager.Controllers
                     ModelState.AddModelError("Password", "Mot de passe incorrecte.");
                     return View(loginCredential);
                 }
-                OnlineUsers.AddSessionUser(DB.GetUser(loginCredential));
+                if (OnlineUsers.IsOnLine(user.Id))
+                {
+                    ModelState.AddModelError("Email", "Cet usager est déjà connecté.");
+                    return View(loginCredential);
+                }
+                OnlineUsers.AddSessionUser(user.Id);
                 return RedirectToAction("Index", "Application");
             }
             return View(loginCredential);
