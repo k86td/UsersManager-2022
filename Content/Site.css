@@ -48,5 +48,53 @@ legend {
 }
 
 .formField {
-    width:280px;
+    width: 280px;
+}
+
+.UploadedImage {
+    max-width: 100%;
+}
+
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 25px;
+}
+
+.smallAvatar {
+    margin-top: -6px;
+    margin-right: 4px;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    float: left;
+}
+
+.mediumAvatar {
+    margin-right: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    float: left;
+}
+
+.userListContainer {
+    display: grid;
+    grid-template-columns: 220px 100px 80px 80px 120px 80px 80px;
+    height: 60px;
+}
+
+.CB_Blocked {
+    width: 18px;
+    height: 18px;
+}
+
+.small_icon {
+    height:24px;
+}
+
+
+.medium_icon {
+    height: 32px;
 }

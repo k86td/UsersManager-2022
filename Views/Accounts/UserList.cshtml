@@ -5,93 +5,62 @@
 }
 
 <h2>Liste des usagers</h2>
+<hr />
+<div class="userListContainer" style="font-size:18px; font-weight:bold">
+    <div>Usager</div>
+    <div style="text-align:center">Connecté</div>
+    <div style="text-align:center">Droits</div>
 
-<table class="table">
-    <tr>
-        <th>En ligne</th>
-        <th>
-            Type
-        </th>
-        <th>
-            Nom
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GenderId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreationDate)
-        </th>
-        <th>
-            Vérifié
-        </th>
-        <th>
-            Bloqué
-        </th>
-    </tr>
+    <div style="text-align:center">@Html.DisplayNameFor(model => model.GenderId)</div>
+    <div>Création</div>
+    <div style="text-align:center">Vérifié</div>
+    <div style="text-align:center">Bloqué</div>
+</div>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @if (UsersManager.Models.OnlineUsers.IsOnLine(item.Id))
+@foreach (var item in Model)
+{
+    var emailReference = "mailto:" + item.Email;
+    <div class="userListContainer" style="font-size:18px;">
+        <div>
+            <a href="@emailReference">
+                @Helper.AvatarUser(item)
+            </a>
+        </div>
+
+        <div style="text-align:center">
+            @Helper.OnLineStatusIcon(UsersManager.Models.OnlineUsers.IsOnLine(item.Id), item.Blocked)
+        </div>
+        <div style="text-align:center">
+            @Helper.UserTypeIcon(item.UserTypeId)
+        </div>
+        <div style="text-align:center">
+            @Helper.GenderIcon(item.GenderId)
+        </div>
+        <div>
+            @Html.DisplayFor(modelItem => item.CreationDate)
+        </div>
+        <div style="text-align:center">
+            @Helper.Checked(item.Verified)
+        </div>
+        <div style="text-align:center">
+            @if (!item.IsAdmin)
+            {
+                if (item.Blocked)
                 {
-                    <span>oui</span>
+                    <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" checked />
                 }
                 else
                 {
-                    <span>non</span>
+                    <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" />
                 }
-            </td>
-            <td>
-                @item.UserType.Name
-            </td>
-            <td>
-                @item.GetFullName()
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @item.Gender.Name
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @if (item.Verified)
-                {
-                    <span>oui</span>
-                }
-                else
-                {
-                    <span>non</span>
-                }
-            </td>
-            <td>
-                @if (!item.IsAdmin)
-                {
-                    if (item.Blocked)
-                    {
-                        <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" checked />
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" />
-                    }
-                }
-                else
-                {
-                    <div></div>
-                }
-
-            </td>
-        </tr>
-    }
-
-</table>
+            }
+            else
+            {
+                <div></div>
+            }
+        </div>
+    </div>
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -15,11 +15,34 @@ namespace UsersManager.Models
             UserTypeId = 3; // User
             Verified = false;
             Blocked = false;
+            InitAvatarManagement();
+        }
+
+        public void InitAvatarManagement()
+        {
+            AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png");
+            AvatarReference.MaxSize = 512;
+            AvatarReference.HasThumbnail = false;
+        }
+        public String GetAvatarURL()
+        {
+            return AvatarReference.GetURL(Avatar, false);
+        }
+        public void SaveAvatar()
+        {
+            Avatar = AvatarReference.SaveImage(AvatarImageData, Avatar);
+        }
+        public void RemoveAvatar()
+        {
+            AvatarReference.Remove(Avatar);
         }
 
         public string ConfirmEmail { get; set; }
         public string ConfirmPassword { get; set; }
+        private ImageGUIDReference AvatarReference { get; set; }
 
+        [Display(Name = "Avatar")]
+        public string AvatarImageData { get; set; }
         public bool IsAdmin
         {
             get { return UserTypeId == 1 /*Admin*/; }

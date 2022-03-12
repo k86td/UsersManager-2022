@@ -87,6 +87,7 @@ namespace UsersManager.Models
 
         public static User Add_User(this UsersDBEntities DB, User user)
         {
+            user.SaveAvatar();
             user = DB.Users.Add(user);
             DB.SaveChanges();
             DB.Entry(user).Reference(u => u.Gender).Load();
@@ -97,12 +98,23 @@ namespace UsersManager.Models
 
         public static User Update_User(this UsersDBEntities DB, User user)
         {
+            user.SaveAvatar();
             DB.Entry(user).State = EntityState.Modified;
             DB.SaveChanges();
             DB.Entry(user).Reference(u => u.Gender).Load();
             DB.Entry(user).Reference(u => u.UserType).Load();
             OnlineUsers.RenewSerialNumber();
             return user;
+        }
+
+        public static bool RemoveUser(this UsersDBEntities DB, User user)
+        {
+            user.RemoveAvatar();
+            User userToDelete = DB.Users.Find(user.Id);
+            DB.Users.Remove(userToDelete);
+            DB.SaveChanges();
+            OnlineUsers.RenewSerialNumber();
+            return true;
         }
 
         public static User FindUser(this UsersDBEntities DB, int id)

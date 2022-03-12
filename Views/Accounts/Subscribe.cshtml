@@ -28,6 +28,13 @@
             @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = @Html.DisplayNameFor(model => model.LastName) } })
             @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
         </fieldset>
+
+        <fieldset class="formField">
+            <legend>@Html.DisplayNameFor(model => model.AvatarImageData)</legend>
+            @Helper.ImageUploader(Model.Id, Model.GetAvatarURL(), "AvatarImageData", "~/ImagesData/Loading_icon.gif", "Cliquez pour choisir votre avatar")
+            @Html.ValidationMessageFor(model => model.AvatarImageData, "", new { @class = "text-danger" })
+        </fieldset>
+
         <fieldset class="formField">
             <legend>@Html.DisplayNameFor(model => model.GenderId)</legend>
             @Helper.ListToRadioButtonGroup("GenderId", (SelectList)ViewBag.Genders, Model.GenderId)
@@ -36,7 +43,7 @@
 
         <fieldset class="formField">
             <legend>@Html.DisplayNameFor(model => model.Email)</legend>
-@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = @Html.DisplayNameFor(model => model.Email) } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = @Html.DisplayNameFor(model => model.Email) } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             <br />
             @Html.EditorFor(model => model.ConfirmEmail, new { htmlAttributes = new { @class = "form-control", placeholder = @Html.DisplayNameFor(model => model.ConfirmEmail) } })
@@ -67,4 +74,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/imageUploader")
 }

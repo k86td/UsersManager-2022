@@ -135,6 +135,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmailView.cs" />
+    <Compile Include="Models\ImageGUIDReference.cs" />
     <Compile Include="Models\LoginCredential.cs" />
     <Compile Include="Models\OnlineUsers.cs" />
     <Compile Include="Controllers\Gmail.cs" />
@@ -186,10 +187,19 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\UI-icons\Abort.png" />
+    <Content Include="Content\UI-icons\Accept.png" />
+    <Content Include="Content\UI-icons\Blocked.png" />
+    <Content Include="Content\UI-icons\Masked.png" />
+    <Content Include="Content\UI-icons\OffLine.png" />
+    <Content Include="Content\UI-icons\OnLine.png" />
+    <Content Include="Content\UI-icons\UnBlocked.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ImagesData\Avatars\no_avatar.png" />
+    <Content Include="ImagesData\Loading_icon.gif" />
     <Content Include="Models\UsersDBEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UsersDBEntities.Context.cs</LastGenOutput>
@@ -212,6 +222,7 @@
     <Content Include="App_Code\Helper.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\FormUtilities.js" />
+    <Content Include="Scripts\imageUploader.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />

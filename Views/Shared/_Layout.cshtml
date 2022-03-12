@@ -33,7 +33,7 @@
                         {
                             <li>@Html.ActionLink("Usagers", "UserList", "Accounts")</li>
                         }
-                        <li>@Html.ActionLink(currentUser.GetFullName(), "Profil", "Accounts")</li>
+                        <li>  @Helper.AvatarProfilLink(currentUser)</li>
                         <li>@Html.ActionLink("Se déconnecter", "Logout", "Accounts")</li>
                     }
                     <li>@Html.ActionLink("À propos", "About", "Home")</li>
