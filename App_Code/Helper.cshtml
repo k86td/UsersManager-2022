@@ -57,7 +57,6 @@
     </div>
 }
 
-
 @helper BoolToValue(bool b, string falseText = "non", string trueText = "oui")
 {
     if (b)
@@ -75,7 +74,6 @@
     string date = dateTime.ToShortDateString() + "T" + dateTime.ToShortTimeString();
     <input type="datetime-local" name="@Id" id="@Id" value="@date" class="form-control" />
 }
-
 
 @helper When(DateTime date)
 {
@@ -153,7 +151,6 @@
     var iconUrl = Url.Content(icon);
     <img src="@iconUrl" class="small_icon" />
 }
-
 
 @helper Checked(bool checkStatus)
 {
