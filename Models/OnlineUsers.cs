@@ -111,6 +111,7 @@ namespace UsersManager.Models
             return UsersId.Contains(userId);
         }
     }
+
     public class UserAccess : AuthorizeAttribute
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)
