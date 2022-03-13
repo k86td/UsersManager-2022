@@ -41,7 +41,7 @@ namespace UsersManager.Models
                 Transaction = null;
             }
             else
-                throw new Exception("Aucune ransaction en cours! Impossible de mettre à jour la base de ddonnées!");
+                throw new Exception("Aucune transaction en cours! Impossible de mettre à jour la base de données!");
         }
 
         public static bool EmailAvailable(this UsersDBEntities DB, string email, int excludedId = 0)
@@ -67,7 +67,6 @@ namespace UsersManager.Models
                 return user.Blocked;
             return true;
         }
-
 
         public static bool EmailVerified(this UsersDBEntities DB, string email)
         {
@@ -130,17 +129,18 @@ namespace UsersManager.Models
             return user;
         }
 
-        public static bool Verify_User(this UsersDBEntities DB, int id, int code)
+        public static bool Verify_User(this UsersDBEntities DB, int userId, int code)
         {
-            User user = DB.FindUser(id);
+            User user = DB.FindUser(userId);
             if (user != null)
             {
-                UnverifiedEmail unverifiedEmail = DB.UnverifiedEmails.Where(u => u.Email == user.Email).FirstOrDefault();
+                UnverifiedEmail unverifiedEmail = DB.UnverifiedEmails.Where(u => u.UserId == userId).FirstOrDefault();
                 if (unverifiedEmail != null)
                 {
                     if (unverifiedEmail.VerificationCode == code)
                     {
                         BeginTransaction(DB);
+                        user.Email = user.ConfirmEmail = unverifiedEmail.Email;
                         user.Verified = true;
                         DB.Entry(user).State = EntityState.Modified;
                         DB.UnverifiedEmails.Remove(unverifiedEmail);
@@ -154,12 +154,18 @@ namespace UsersManager.Models
             return false;
         }
 
-        public static UnverifiedEmail Add_UnverifiedEmail(this UsersDBEntities DB, string email)
+        public static UnverifiedEmail Add_UnverifiedEmail(this UsersDBEntities DB, int userId, string email)
         {
-            UnverifiedEmail unverifiedEmail = new UnverifiedEmail() { Email = email, VerificationCode = DateTime.Now.Millisecond };
+      
+            UnverifiedEmail unverifiedEmail = new UnverifiedEmail() { UserId = userId, Email = email, VerificationCode = DateTime.Now.Millisecond };
             unverifiedEmail = DB.UnverifiedEmails.Add(unverifiedEmail);
             DB.SaveChanges();
             return unverifiedEmail;
+        }
+
+        public static bool HaveUnverifiedEmail(this UsersDBEntities DB, int userId, int code)
+        {
+            return DB.UnverifiedEmails.Where(u => (u.UserId == userId && u.VerificationCode == code)).FirstOrDefault() != null;
         }
 
         public static ResetPasswordCommand Add_ResetPasswordCommand(this UsersDBEntities DB, string email)
@@ -180,16 +186,22 @@ namespace UsersManager.Models
             return DB.ResetPasswordCommands.Where(r => (r.UserId == userid && r.VerificationCode == verificationCode)).FirstOrDefault();
         }
 
-        public static bool ResetPassword(this UsersDBEntities DB, User user)
+        public static bool ResetPassword(this UsersDBEntities DB, int userId, string password)
         {
-            ResetPasswordCommand resetPasswordCommand = DB.ResetPasswordCommands.Where(r => r.UserId == user.Id).FirstOrDefault();
-            if (resetPasswordCommand != null)
+            User user = DB.FindUser(userId);
+            if (user != null)
             {
-                BeginTransaction(DB);
-                DB.Entry(user).State = EntityState.Modified;
-                DB.ResetPasswordCommands.Remove(resetPasswordCommand);
-                Commit();
-                return true;
+                user.Password = user.ConfirmPassword = password;
+                ResetPasswordCommand resetPasswordCommand = DB.ResetPasswordCommands.Where(r => r.UserId == userId).FirstOrDefault();
+                if (resetPasswordCommand != null)
+                {
+                    BeginTransaction(DB);
+                    DB.Entry(user).State = EntityState.Modified;
+                    DB.ResetPasswordCommands.Remove(resetPasswordCommand);
+                    DB.SaveChanges();
+                    Commit();
+                    return true;
+                }
             }
             return false;
         }

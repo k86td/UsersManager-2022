@@ -42,7 +42,7 @@ namespace UsersManager.Controllers
             if (ModelState.IsValid)
             {
                 user = DB.Add_User(user);
-                SendEmailVerification(user);
+                SendEmailVerification(user, user.Email);
                 return RedirectToAction("SubscribeDone/" + user.Id.ToString());
             }
             ViewBag.Genders = SelectListItemConverter<Gender>.Convert(DB.Genders.ToList());
@@ -58,30 +58,33 @@ namespace UsersManager.Controllers
         #endregion
 
         #region Account Verification
-        public void SendEmailVerification(User user)
+        public void SendEmailVerification(User user, string newEmail)
         {
             if (user.Id != 0)
             {
-                UnverifiedEmail unverifiedEmail = DB.Add_UnverifiedEmail(user.Email);
-                string verificationUrl = Url.Action("VerifyUser", "Accounts", null, Request.Url.Scheme);
-                String Link = @"<br/><a href='" + verificationUrl + "?userid=" + user.Id + "&code=" + unverifiedEmail.VerificationCode + @"' > Confirmez votre inscription...</a>";
-
-                String suffixe = "";
-                if (user.GenderId == 2)
+                UnverifiedEmail unverifiedEmail = DB.Add_UnverifiedEmail(user.Id, newEmail);
+                if (unverifiedEmail != null)
                 {
-                    suffixe = "e";
+                    string verificationUrl = Url.Action("VerifyUser", "Accounts", null, Request.Url.Scheme);
+                    String Link = @"<br/><a href='" + verificationUrl + "?userid=" + user.Id + "&code=" + unverifiedEmail.VerificationCode + @"' > Confirmez votre inscription...</a>";
+
+                    String suffixe = "";
+                    if (user.GenderId == 2)
+                    {
+                        suffixe = "e";
+                    }
+                    string Subject = "UsersManager - Vérification d'inscription...";
+
+                    string Body = "Bonjour " + user.GetFullName(true) + @",<br/><br/>";
+                    Body += @"Merci de vous être inscrit" + suffixe + " au site [nom de l'application]. <br/>";
+                    Body += @"Pour utiliser votre compte vous devez confirmer votre inscription en cliquant sur le lien suivant : <br/>";
+                    Body += Link;
+                    Body += @"<br/><br/>Ce courriel a été généré automatiquement, veuillez ne pas y répondre.";
+                    Body += @"<br/><br/>Si vous éprouvez des difficultés ou s'il s'agit d'une erreur, veuillez le signaler à <a href='mailto:"
+                         + Gmail.SMTP.OwnerEmail + "'>" + Gmail.SMTP.OwnerName + "</a> (Webmestre du site [nom de l'application])";
+
+                    Gmail.SMTP.SendEmail(user.GetFullName(), unverifiedEmail.Email, Subject, Body);
                 }
-                string Subject = "UsersManager - Vérification d'inscription...";
-
-                string Body = "Bonjour " + user.GetFullName(true) + @",<br/><br/>";
-                Body += @"Merci de vous être inscrit" + suffixe + " au site [nom de l'application]. <br/>";
-                Body += @"Pour utiliser votre compte vous devez confirmer votre inscription en cliquant sur le lien suivant : <br/>";
-                Body += Link;
-                Body += @"<br/><br/>Ce courriel a été généré automatiquement, veuillez ne pas y répondre.";
-                Body += @"<br/><br/>Si vous éprouvez des difficultés ou s'il s'agit d'une erreur, veuillez le signaler à <a href='mailto:"
-                     + Gmail.SMTP.OwnerEmail + "'>" + Gmail.SMTP.OwnerName + "</a> (Webmestre du site [nom de l'application])";
-
-                Gmail.SMTP.SendEmail(user.GetFullName(), user.Email, Subject, Body);
             }
         }
         public ActionResult VerifyDone(int id)
@@ -104,9 +107,11 @@ namespace UsersManager.Controllers
             User newlySubscribedUser = DB.FindUser(userid);
             if (newlySubscribedUser != null)
             {
-                if (DB.EmailVerified(newlySubscribedUser.Email))
-                    return RedirectToAction("AlreadyVerified");
-
+                if (!DB.HaveUnverifiedEmail(userid, code))
+                {
+                    if (DB.EmailVerified(newlySubscribedUser.Email))
+                        return RedirectToAction("AlreadyVerified");
+                }
                 if (DB.Verify_User(userid, code))
                     return RedirectToAction("VerifyDone/" + userid);
             }
@@ -120,26 +125,28 @@ namespace UsersManager.Controllers
             OnlineUsers.RemoveSessionUser();
             return View();
         }
-        public void SendEmailChangedVerification(User user)
+        public void SendEmailChangedVerification(User user, string newEmail)
         {
             if (user.Id != 0)
             {
-                UnverifiedEmail unverifiedEmail = DB.Add_UnverifiedEmail(user.Email);
-                string verificationUrl = Url.Action("VerifyUser", "Accounts", null, Request.Url.Scheme);
-                String Link = @"<br/><a href='" + verificationUrl + "?userid=" + user.Id + "&code=" + unverifiedEmail.VerificationCode + @"' > Confirmez votre adresse...</a>";
+                UnverifiedEmail unverifiedEmail = DB.Add_UnverifiedEmail(user.Id, newEmail);
+                if (unverifiedEmail != null)
+                {
+                    string verificationUrl = Url.Action("VerifyUser", "Accounts", null, Request.Url.Scheme);
+                    String Link = @"<br/><a href='" + verificationUrl + "?userid=" + user.Id + "&code=" + unverifiedEmail.VerificationCode + @"' > Confirmez votre adresse...</a>";
 
+                    string Subject = "UsersManager - Vérification de courriel...";
 
-                string Subject = "UsersManager - Vérification de courriel...";
+                    string Body = "Bonjour " + user.GetFullName(true) + @",<br/><br/>";
+                    Body += @"Vous avez modifié votre adresse de courriel. <br/>";
+                    Body += @"Pour que ce changement soit pris en compte, vous devez confirmer cette adresse en cliquant sur le lien suivant : <br/>";
+                    Body += Link;
+                    Body += @"<br/><br/>Ce courriel a été généré automatiquement, veuillez ne pas y répondre.";
+                    Body += @"<br/><br/>Si vous éprouvez des difficultés ou s'il s'agit d'une erreur, veuillez le signaler à <a href='mailto:"
+                         + Gmail.SMTP.OwnerEmail + "'>" + Gmail.SMTP.OwnerName + "</a> (Webmestre du site [nom de l'application])";
 
-                string Body = "Bonjour " + user.GetFullName(true) + @",<br/><br/>";
-                Body += @"Vous avez modifié votre adresse de courriel. <br/>";
-                Body += @"Pour utiliser votre compte à nouveau vous confirmer cette adresse en cliquant sur le lien suivant : <br/>";
-                Body += Link;
-                Body += @"<br/><br/>Ce courriel a été généré automatiquement, veuillez ne pas y répondre.";
-                Body += @"<br/><br/>Si vous éprouvez des difficultés ou s'il s'agit d'une erreur, veuillez le signaler à <a href='mailto:"
-                     + Gmail.SMTP.OwnerEmail + "'>" + Gmail.SMTP.OwnerName + "</a> (Webmestre du site [nom de l'application])";
-
-                Gmail.SMTP.SendEmail(user.GetFullName(), user.Email, Subject, Body);
+                    Gmail.SMTP.SendEmail(user.GetFullName(), unverifiedEmail.Email, Subject, Body);
+                }
             }
         }
         #endregion
@@ -154,11 +161,8 @@ namespace UsersManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (DB.Add_ResetPasswordCommand(Email) != null)
-                {
-                    SendResetPasswordCommandEmail(Email);
-                    return RedirectToAction("ResetPasswordCommandAlert");
-                }
+                SendResetPasswordCommandEmail(Email);
+                return RedirectToAction("ResetPasswordCommandAlert");
             }
             return View(Email);
         }
@@ -189,24 +193,17 @@ namespace UsersManager.Controllers
             ResetPasswordCommand resetPasswordCommand = DB.Find_ResetPasswordCommand(userid, code);
             if (resetPasswordCommand != null)
                 return View(new PasswordView() { UserId = userid });
-            return RedirectToAction("Login");
+            return RedirectToAction("ResetPasswordError");
         }
         [HttpPost]
         public ActionResult ResetPassword(PasswordView passwordView)
         {
             if (ModelState.IsValid)
             {
-                User user = DB.FindUser(passwordView.UserId);
-                if (user != null)
-                {
-                    user.Password = user.ConfirmPassword = passwordView.Password;
-                    DB.Update_User(user);
+                if (DB.ResetPassword(passwordView.UserId, passwordView.Password))
                     return RedirectToAction("ResetPasswordSuccess");
-                }
                 else
-                {
                     return RedirectToAction("ResetPasswordError");
-                }
             }
             return View(passwordView);
         }
@@ -236,6 +233,7 @@ namespace UsersManager.Controllers
         public ActionResult Profil(User user)
         {
             User currentUser = OnlineUsers.GetSessionUser();
+            string newEmail = "";
             if (ModelState.IsValid)
             {
                 if (user.Password == "Not Changed")
@@ -246,13 +244,15 @@ namespace UsersManager.Controllers
 
                 if (user.Email != currentUser.Email)
                 {
-                    user.Verified = false;
+                    newEmail = user.Email;
+                    user.Email = user.ConfirmEmail = currentUser.Email;
                 }
+
                 user = DB.Update_User(user);
-                
-                if (!user.Verified)
+
+                if (newEmail != "")
                 {
-                    SendEmailChangedVerification(user);
+                    SendEmailChangedVerification(user, newEmail);
                     return RedirectToAction("EmailChangedAlert");
                 }
                 else
@@ -266,7 +266,7 @@ namespace UsersManager.Controllers
         #region Login and Logout
         public ActionResult Login(string message)
         {
-            ViewBag.Message = message; 
+            ViewBag.Message = message;
             return View(new LoginCredential());
         }
 
