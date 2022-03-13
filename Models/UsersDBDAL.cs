@@ -106,14 +106,19 @@ namespace UsersManager.Models
             return user;
         }
 
-        public static bool RemoveUser(this UsersDBEntities DB, User user)
+        public static bool RemoveUser(this UsersDBEntities DB, int userId)
         {
-            user.RemoveAvatar();
-            User userToDelete = DB.Users.Find(user.Id);
-            DB.Users.Remove(userToDelete);
-            DB.SaveChanges();
-            OnlineUsers.RenewSerialNumber();
-            return true;
+            User user = DB.Users.Find(userId);
+            if (user != null)
+            {
+                user.RemoveAvatar();
+                User userToDelete = DB.Users.Find(user.Id);
+                DB.Users.Remove(userToDelete);
+                DB.SaveChanges();
+                OnlineUsers.RenewSerialNumber();
+                return true;
+            }
+            return false;
         }
 
         public static User FindUser(this UsersDBEntities DB, int id)

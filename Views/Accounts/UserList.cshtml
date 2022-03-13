@@ -15,6 +15,7 @@
     <div>Création</div>
     <div style="text-align:center">Vérifié</div>
     <div style="text-align:center">Bloqué</div>
+    <div></div>
 </div>
 
 @foreach (var item in Model)
@@ -53,6 +54,16 @@
                 {
                     <input type="checkbox" id="blocked_@item.Id" class="CB_Blocked" />
                 }
+            }
+            else
+            {
+                <div></div>
+            }
+        </div>
+        <div>
+            @if (!item.IsAdmin)
+            {
+                @Helper.GlyphiconConfirmAction("Delete/" + item.Id.ToString(), "glyphicon-remove-circle", "Effacer l'usager " + item.GetFullName() + "...")
             }
             else
             {

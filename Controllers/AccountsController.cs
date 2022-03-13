@@ -328,5 +328,12 @@ namespace UsersManager.Controllers
             DB.Update_User(user);
             return RedirectToAction("UserList");
         }
+
+        [AdminAccess]
+        public ActionResult Delete(int id)
+        {
+            DB.RemoveUser(id);
+            return RedirectToAction("UserList");
+        }
     }
 }
