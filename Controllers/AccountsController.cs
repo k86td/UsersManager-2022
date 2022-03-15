@@ -309,7 +309,7 @@ namespace UsersManager.Controllers
         }
         #endregion
 
-
+        #region Administrator actions
         public JsonResult NeedUpdate()
         {
             return Json(OnlineUsers.NeedUpdate(), JsonRequestBehavior.AllowGet);
@@ -335,5 +335,6 @@ namespace UsersManager.Controllers
             DB.RemoveUser(id);
             return RedirectToAction("UserList");
         }
+        #endregion
     }
 }

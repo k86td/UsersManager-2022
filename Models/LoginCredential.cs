@@ -9,7 +9,7 @@ namespace UsersManager.Models
     public class LoginCredential
     {
         [Display(Name = "Courriel"), EmailAddress(ErrorMessage = "Invalide"), Required(ErrorMessage = "Obligatoire")]
-        [System.Web.Mvc.Remote("EmailExist", "Accounts", HttpMethod = "POST", AdditionalFields = "Id", ErrorMessage = "Ce courriel n'existe pas.")]
+        [System.Web.Mvc.Remote("EmailExist", "Accounts", HttpMethod = "POST", ErrorMessage = "Ce courriel n'existe pas.")]
         public string Email { get; set; }
 
         [Display(Name = "Mot de passe"), Required(ErrorMessage = "Obligatoire")]
