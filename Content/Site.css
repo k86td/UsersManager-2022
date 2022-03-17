@@ -99,7 +99,10 @@ legend {
     height: 32px;
 }
 
-fieldset:hover > .imageUploader {
-    border:2px solid blue;
+.UploadedImage {
+    border:2px solid white;
+}
 
+.UploadedImage:hover {
+    border: 2px solid blue;
 }

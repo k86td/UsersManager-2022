@@ -64,15 +64,29 @@ namespace UsersManager.Models
             // Extract image data <MIME,DATA>
             string mime = ImageData.Split(',')[0];
             string data = ImageData.Split(',')[1];
-            ImageFormat overrideFormat = (mime.IndexOf("png") != -1 ? ImageFormat.Png : imageFormat);
-            var stream = new MemoryStream(Convert.FromBase64String(data));
-            int maxSize = thumbnail ? ThumbnailSize : MaxSize;
-            Image original = Image.FromStream(stream);
+            if (mime.IndexOf("webp") != -1)
+            {
+                // La classe Image ne supporte pas le format webp. Du coup pas possible de manipuler l'échelle pour créer un miniature.
+                var stream = new MemoryStream(Convert.FromBase64String(data));
+                FileStream file = new FileStream(HttpContext.Current.Server.MapPath(GetURL(GUID, thumbnail)), FileMode.Create, FileAccess.Write);
+                stream.WriteTo(file);
+                file.Close();
+                stream.Close();
+            }
+            else
+            {
+                ImageFormat overrideFormat = (mime.IndexOf("png") != -1 ? ImageFormat.Png : imageFormat);
+                var stream = new MemoryStream(Convert.FromBase64String(data));
 
-            // Limit size of image
-            if ((original.Size.Width > maxSize) || (original.Size.Height > maxSize))
-                original = ScaleImage(original, maxSize, maxSize);
-            original.Save(HttpContext.Current.Server.MapPath(GetURL(GUID, thumbnail)), overrideFormat);
+                int maxSize = thumbnail ? ThumbnailSize : MaxSize;
+                Image original = Image.FromStream(stream);
+
+                // Limit size of image
+                if ((original.Size.Width > maxSize) || (original.Size.Height > maxSize))
+                    original = ScaleImage(original, maxSize, maxSize);
+                original.Save(HttpContext.Current.Server.MapPath(GetURL(GUID, thumbnail)), overrideFormat);
+            }
+           
         }
         public String SaveImage(string ImageData, String PreviousGUID = "")
         {

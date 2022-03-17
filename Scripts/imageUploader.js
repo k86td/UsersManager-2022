@@ -67,7 +67,7 @@ let maxImageSize = 15000000;
 var currentId = 0;
 
 // Accepted file formats
-let acceptedFileFormat = "image/jpeg,image/jpg,image/gif,image/png,image/bmp";
+let acceptedFileFormat = "image/jpeg,image/jpg,image/gif,image/png,image/bmp,image/webp";
 
 $(document).ready(() => {
     /* you can have more than one file uploader */
@@ -86,10 +86,75 @@ $(document).ready(() => {
         $(this).append('<input style="visibility:hidden;height:0px;" class="fileUploadedExistRule fileUploadedSizeRule" id="' +
             controlId + '" name="' + controlId + '" createMode = "' + createMode + '" waitingImage ="' + waitingImage + '">');
 
-       //$(this).append('<br><span>Cliquez et faites CTRL-V</span>');
+        //$(this).append('<br><span>Cliquez et faites CTRL-V</span>');
         ImageUploader_AttachEvent(controlId);
         AddCustomValidator();
     });
+
+    $(".UploadedImage").on('dragenter', function (e) {
+        console.log('drag enter')
+        $(this).css('border', '2px solid blue');
+    });
+
+    $(".UploadedImage").on('dragover', function (e) {
+        console.log('drag over')
+        $(this).css('border', '2px solid blue');
+        e.preventDefault();
+    });
+
+    $(".UploadedImage").on('dragleave', function (e) {
+        console.log('drag over')
+        $(this).css('border', '2px solid white');
+        e.preventDefault();
+    });
+
+    $(".UploadedImage").on('drop', function (e) {
+        var image = e.originalEvent.dataTransfer.files[0];
+        console.log(image)
+        $(this).css('background', '#D8F9D3');
+        e.preventDefault();
+        let id = $(this).attr('id').split('_')[0];
+        console.log(id);
+        let UploadedImage = document.querySelector('#' + id + '_UploadedImage');
+        let waitingImage = UploadedImage.getAttribute("waitingImage");
+        let ImageData = document.querySelector('#' + id);
+        // store the previous uploaded image in case the file selection is aborted
+        UploadedImage.setAttribute("previousImage", UploadedImage.src);
+
+        // set the waiting image
+        if (waitingImage !== "") UploadedImage.src = waitingImage;
+        /* take some delai before starting uploading process in order to let browser to update UploadedImage new source affectation */
+        let t2 = setTimeout(function () {
+            if (UploadedImage !== null) {
+                let len = image.name.length;
+
+                if (len !== 0) {
+                    let fname = image.name;
+                    console.log(fname)
+                    let ext = fname.split('.').pop().toLowerCase();
+
+                    if (!validExtension(ext)) {
+                        alert(wrongFileFormatMessage);
+                        UploadedImage.src = UploadedImage.getAttribute("previousImage");
+                    }
+                    else {
+                        let fReader = new FileReader();
+                        fReader.readAsDataURL(image);
+                        fReader.onloadend = () => {
+                            UploadedImage.src = fReader.result;
+                            ImageData.value = UploadedImage.src;
+                        };
+                    }
+                }
+                else {
+                    UploadedImage.src = null;
+                }
+            }
+        }, 30);
+        $(this).css('border', '2px solid white');
+        return true;
+    });
+
 });
 
 function ImageUploader_AttachEvent(controlId) {
@@ -159,6 +224,7 @@ function preLoadImage(event) {
                     }
                     else {
                         let fReader = new FileReader();
+                        console.log(ImageUploader.files[0])
                         fReader.readAsDataURL(ImageUploader.files[0]);
                         fReader.onloadend = () => {
                             UploadedImage.src = fReader.result;
@@ -181,7 +247,7 @@ document.onpaste = function (event) {
     let ImageData = document.querySelector('#' + id);
     let waitingImage = UploadedImage.getAttribute("waitingImage");
     if (waitingImage !== "") UploadedImage.src = waitingImage;
-   // use event.originalEvent.clipboard for newer chrome versions
+    // use event.originalEvent.clipboard for newer chrome versions
     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
     // find pasted image among pasted items
     var blob = null;
@@ -194,14 +260,12 @@ document.onpaste = function (event) {
     if (blob !== null) {
         var reader = new FileReader();
         reader.onload = function (event) {
-           // console.log(event.target.result); // data url!
+            // console.log(event.target.result); // data url!
             UploadedImage.src = event.target.result;
             ImageData.value = UploadedImage.src;
         };
         reader.readAsDataURL(blob);
     }
 }
-
-
 
 //https://soshace.com/the-ultimate-guide-to-drag-and-drop-image-uploading-with-pure-javascript/
