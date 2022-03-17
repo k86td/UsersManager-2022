@@ -98,3 +98,8 @@ legend {
 .medium_icon {
     height: 32px;
 }
+
+fieldset:hover > .imageUploader {
+    border:2px solid blue;
+
+}

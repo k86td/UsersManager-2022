@@ -78,7 +78,7 @@ $(document).ready(() => {
         let createMode = parseInt(id) === 0;
 
         let defaultImage = $(this).attr('imageSrc');
-        $(this).append('<img id="' + controlId + '_UploadedImage" name="' + controlId + '_UploadedImage" class="UploadedImage" src="' + defaultImage + '" waitingImage ="' + waitingImage + '">');
+        $(this).append('<img id="' + controlId + '_UploadedImage" name="' + controlId + '_UploadedImage" tabindex=0 class="UploadedImage" src="' + defaultImage + '" waitingImage ="' + waitingImage + '">');
 
         $(this).append('<input  id="' + controlId + '_ImageUploader" type="file" style="visibility:hidden;height:0px;" ' +
             ' accept="' + acceptedFileFormat + '"> ');
@@ -86,6 +86,7 @@ $(document).ready(() => {
         $(this).append('<input style="visibility:hidden;height:0px;" class="fileUploadedExistRule fileUploadedSizeRule" id="' +
             controlId + '" name="' + controlId + '" createMode = "' + createMode + '" waitingImage ="' + waitingImage + '">');
 
+       //$(this).append('<br><span>Cliquez et faites CTRL-V</span>');
         ImageUploader_AttachEvent(controlId);
         AddCustomValidator();
     });
@@ -173,3 +174,34 @@ function preLoadImage(event) {
     }
     return true;
 }
+document.onpaste = function (event) {
+    console.log(event.target.id);
+    let id = event.target.id.split('_')[0];
+    let UploadedImage = document.querySelector('#' + id + '_UploadedImage');
+    let ImageData = document.querySelector('#' + id);
+    let waitingImage = UploadedImage.getAttribute("waitingImage");
+    if (waitingImage !== "") UploadedImage.src = waitingImage;
+   // use event.originalEvent.clipboard for newer chrome versions
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    // find pasted image among pasted items
+    var blob = null;
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+        }
+    }
+    // load image if there is a pasted image
+    if (blob !== null) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+           // console.log(event.target.result); // data url!
+            UploadedImage.src = event.target.result;
+            ImageData.value = UploadedImage.src;
+        };
+        reader.readAsDataURL(blob);
+    }
+}
+
+
+
+//https://soshace.com/the-ultimate-guide-to-drag-and-drop-image-uploading-with-pure-javascript/
