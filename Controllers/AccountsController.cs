@@ -34,7 +34,8 @@ namespace UsersManager.Controllers
         public ActionResult Subscribe()
         {
             ViewBag.Genders = SelectListItemConverter<Gender>.Convert(DB.Genders.ToList());
-            return View(new User());
+            User user = new User();
+            return View(user);
         }
         [HttpPost]
         public ActionResult Subscribe(User user)
@@ -297,6 +298,7 @@ namespace UsersManager.Controllers
                     return View(loginCredential);
                 }
                 OnlineUsers.AddSessionUser(user.Id);
+                DB.AddLogin(user.Id);
                 return RedirectToAction("Index", "Application");
             }
             return View(loginCredential);
@@ -304,6 +306,7 @@ namespace UsersManager.Controllers
 
         public ActionResult Logout()
         {
+            DB.UpdateLogout(OnlineUsers.GetSessionUser().Id);
             OnlineUsers.RemoveSessionUser();
             return RedirectToAction("Login");
         }
@@ -337,28 +340,45 @@ namespace UsersManager.Controllers
         }
         #endregion
 
-        #region
-    [AdminAccess]
-    public ActionResult GroupEmail()
-    {
-        ViewBag.SelectedUsers = new List<int>();
-        ViewBag.Users = DB.SortedUsers();
-        return View(new GroupEmail());
-    }
-    [HttpPost]
-    public ActionResult GroupEmail(GroupEmail groupEmail, List<int> SelectedUsers)
-    {
-        if (ModelState.IsValid)
+        #region GroupEmail
+        [AdminAccess]
+        public ActionResult GroupEmail()
         {
-            groupEmail.SelectedUsers = SelectedUsers;
-            groupEmail.Send(DB);
-            return RedirectToAction("UserList");
+            ViewBag.SelectedUsers = new List<int>();
+            ViewBag.Users = DB.SortedUsers();
+            return View(new GroupEmail());
         }
-        ViewBag.SelectedUsers = SelectedUsers;
-        ViewBag.Users = DB.SortedUsers();
-        return View(groupEmail);
-    }
+        [HttpPost]
+        public ActionResult GroupEmail(GroupEmail groupEmail, List<int> SelectedUsers)
+        {
+            if (ModelState.IsValid)
+            {
+                groupEmail.SelectedUsers = SelectedUsers;
+                groupEmail.Send(DB);
+                return RedirectToAction("UserList");
+            }
+            ViewBag.SelectedUsers = SelectedUsers;
+            ViewBag.Users = DB.SortedUsers();
+            return View(groupEmail);
+        }
+        #endregion
 
+        #region Login journal
+        public ActionResult LoginsJournal()
+        {
+            return View(DB.Logins.OrderByDescending(l => l.LoginDate));
+        }
+
+        public ActionResult DeleteJournalDay(string day)
+        {
+            try
+            {
+                DateTime date = DateTime.Parse(day);
+                DB.DeleteLoginsJournalDay(date);
+            }
+            catch (Exception ) {  }
+            return RedirectToAction("LoginsJournal");
+        }
         #endregion
     }
 }

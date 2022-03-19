@@ -32,6 +32,8 @@
                         if (currentUser.IsAdmin)
                         {
                             <li>@Html.ActionLink("Usagers", "UserList", "Accounts")</li>
+                            <li>@Html.ActionLink("Courriel", "GroupEmail", "Accounts")</li>
+                            <li>@Html.ActionLink("Journal", "LoginsJournal", "Accounts")</li>
                         }
                         <li>  @Helper.AvatarProfilLink(currentUser)</li>
                         <li>@Html.ActionLink("Se déconnecter", "Logout", "Accounts")</li>

@@ -12,6 +12,15 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Logins">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="LoginDate" Type="datetime" Nullable="false" />
+          <Property Name="LogoutDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="ResetPasswordCommands">
           <Key>
             <PropertyRef Name="Id" />
@@ -52,6 +61,18 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK__Logins__UserId__607251E5">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Logins" Type="Self.Logins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Logins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Genders">
           <End Role="Genders" Type="Self.Genders" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -78,10 +99,15 @@
         </Association>
         <EntityContainer Name="UsersDBModelStoreContainer">
           <EntitySet Name="Genders" EntityType="Self.Genders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResetPasswordCommands" EntityType="Self.ResetPasswordCommands" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnverifiedEmails" EntityType="Self.UnverifiedEmails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTypes" EntityType="Self.UserTypes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Logins__UserId__607251E5" Association="Self.FK__Logins__UserId__607251E5">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Logins" EntitySet="Logins" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_Genders" Association="Self.FK_Users_Genders">
             <End Role="Genders" EntitySet="Genders" />
             <End Role="Users" EntitySet="Users" />
@@ -120,6 +146,7 @@
           <Property Name="Blocked" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Gender" Relationship="Self.FK_Users_Genders" FromRole="Users" ToRole="Genders" />
           <NavigationProperty Name="UserType" Relationship="Self.FK_Users_UserTypes" FromRole="Users" ToRole="UserTypes" />
+          <NavigationProperty Name="Logins" Relationship="UsersDBModel.FK_Logins_Users" FromRole="User" ToRole="Login" />
         </EntityType>
         <EntityType Name="UserType">
           <Key>
@@ -167,6 +194,11 @@
           </AssociationSet>
           <EntitySet Name="UnverifiedEmails" EntityType="UsersDBModel.UnverifiedEmail" />
           <EntitySet Name="ResetPasswordCommands" EntityType="UsersDBModel.ResetPasswordCommand" />
+          <EntitySet Name="Logins" EntityType="UsersDBModel.Login" />
+          <AssociationSet Name="FK_Logins_Users" Association="UsersDBModel.FK_Logins_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Login" EntitySet="Logins" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="UnverifiedEmail">
           <Key>
@@ -185,6 +217,28 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="VerificationCode" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="LoginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LogoutDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="UsersDBModel.FK_Logins_Users" FromRole="Login" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Logins_Users">
+          <End Type="UsersDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="UsersDBModel.Login" Role="Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -238,6 +292,16 @@
             <EntityTypeMapping TypeName="UsersDBModel.ResetPasswordCommand">
               <MappingFragment StoreEntitySet="ResetPasswordCommands">
                 <ScalarProperty Name="VerificationCode" ColumnName="VerificationCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="UsersDBModel.Login">
+              <MappingFragment StoreEntitySet="Logins">
+                <ScalarProperty Name="LogoutDate" ColumnName="LogoutDate" />
+                <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

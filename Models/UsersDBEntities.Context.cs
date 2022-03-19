@@ -30,5 +30,6 @@ namespace UsersManager.Models
         public virtual DbSet<UserType> UserTypes { get; set; }
         public virtual DbSet<UnverifiedEmail> UnverifiedEmails { get; set; }
         public virtual DbSet<ResetPasswordCommand> ResetPasswordCommands { get; set; }
+        public virtual DbSet<Login> Logins { get; set; }
     }
 }

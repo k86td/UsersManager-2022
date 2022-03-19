@@ -12,6 +12,7 @@
         <AssociationConnector Association="UsersDBModel.FK_Users_UserTypes" ManuallyRouted="false" />
         <EntityTypeShape EntityType="UsersDBModel.UnverifiedEmail" Width="1.5" PointX="4.25" PointY="0.5" />
         <EntityTypeShape EntityType="UsersDBModel.ResetPasswordCommand" Width="2" PointX="4.25" PointY="2.5" />
+        <EntityTypeShape EntityType="UsersDBModel.Login" Width="1.5" PointX="6.875" PointY="1.25" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

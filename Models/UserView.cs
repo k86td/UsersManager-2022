@@ -11,6 +11,7 @@ namespace UsersManager.Models
     {
         public User()
         {
+            this.Logins = new HashSet<Login>();
             CreationDate = DateTime.Now;
             UserTypeId = 3; // User
             Verified = false;

@@ -49,7 +49,9 @@
 {
     //// http://bootboxjs.com/documentation.html#bb-confirm
     var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
-    <div onclick='bootbox.confirm("@TooltipMessage", function(result){ if (result) window.location = "@Url.Action(Action)"; })'>
+    var root = Url.Action("/");
+    var action = root + Action;
+    <div onclick='bootbox.confirm("@TooltipMessage", function(result){ if (result) window.location = "@action"; })'>
         <span class="glyphicon glyphiconStyle @glyphiconClass"
               title="@TooltipMessage"
               data-placement="@ToolTipPlacement">
@@ -157,7 +159,7 @@
             {
                 <input type="checkbox" name="@usersCheckListName" id="@chekBoxId" value="@user.Id" />
             }
-            <label for="@chekBoxId" style=" height: 40px;" >
+            <label for="@chekBoxId" style=" height: 40px;">
                 <div class="smallAvatar" style="background: url(@avatarUrl) no-repeat center center; background-size: cover; float:left;"></div>
                 <div class="ellipsis" style="float:none;">&nbsp;@user.GetFullName()</div>
             </label>

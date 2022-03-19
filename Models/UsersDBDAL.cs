@@ -166,7 +166,7 @@ namespace UsersManager.Models
 
         public static UnverifiedEmail Add_UnverifiedEmail(this UsersDBEntities DB, int userId, string email)
         {
-      
+
             UnverifiedEmail unverifiedEmail = new UnverifiedEmail() { UserId = userId, Email = email, VerificationCode = DateTime.Now.Millisecond };
             unverifiedEmail = DB.UnverifiedEmails.Add(unverifiedEmail);
             DB.SaveChanges();
@@ -214,6 +214,37 @@ namespace UsersManager.Models
                 }
             }
             return false;
+        }
+
+        public static Login AddLogin(this UsersDBEntities DB, int userId)
+        {
+            Login login = new Login();
+            login.LoginDate = login.LogoutDate = DateTime.Now;
+            login.UserId = userId;
+            login = DB.Logins.Add(login);
+            DB.SaveChanges();
+            return login;
+        }
+
+        public static bool UpdateLogout(this UsersDBEntities DB, int userId)
+        {
+            Login login = DB.Logins.Where(l => l.UserId == userId).OrderByDescending(l => l.LoginDate).FirstOrDefault();
+            if (login != null)
+            {
+                login.LogoutDate = DateTime.Now;
+                DB.Entry(login).State = EntityState.Modified;
+                DB.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public static bool DeleteLoginsJournalDay(this UsersDBEntities DB, DateTime day)
+        {
+            DateTime dayAfter = day.AddDays(1);
+            DB.Logins.RemoveRange(DB.Logins.Where(l => l.LoginDate >= day && l.LoginDate < dayAfter));
+            DB.SaveChanges();
+            return true;
         }
     }
 }
