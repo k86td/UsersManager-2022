@@ -135,6 +135,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmailView.cs" />
+    <Compile Include="Models\GroupEmail.cs" />
     <Compile Include="Models\ImageGUIDReference.cs" />
     <Compile Include="Models\LoginCredential.cs" />
     <Compile Include="Models\OnlineUsers.cs" />
@@ -264,6 +265,7 @@
     <Content Include="Views\Accounts\ResetPassword.cshtml" />
     <Content Include="Views\Accounts\ResetPasswordSuccess.cshtml" />
     <Content Include="Views\Accounts\ResetPasswordError.cshtml" />
+    <Content Include="Views\Accounts\GroupEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

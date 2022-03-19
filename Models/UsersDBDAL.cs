@@ -134,6 +134,11 @@ namespace UsersManager.Models
             return user;
         }
 
+        public static IEnumerable<User> SortedUsers(this UsersDBEntities DB)
+        {
+            return DB.Users.OrderBy(u => u.LastName).ThenBy(u => u.FirstName);
+        }
+
         public static bool Verify_User(this UsersDBEntities DB, int userId, int code)
         {
             User user = DB.FindUser(userId);

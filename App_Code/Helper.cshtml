@@ -140,6 +140,32 @@
     <br />
 }
 
+@helper UsersCheckList(IEnumerable<UsersManager.Models.User> users, List<int> selectedUsers, string usersCheckListName = "UsersCheckList")
+{
+    var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+
+    <div style="display:grid; grid-template-columns:30px 300px;">
+        @foreach (var user in users)
+        {
+            var avatarUrl = Url.Content(user.GetAvatarURL());
+            string chekBoxId = usersCheckListName + "_" + user.Id.ToString();
+            if (selectedUsers.Contains(user.Id))
+            {
+                <input type="checkbox" name="@usersCheckListName" id="@chekBoxId" value="@user.Id" checked />
+            }
+            else
+            {
+                <input type="checkbox" name="@usersCheckListName" id="@chekBoxId" value="@user.Id" />
+            }
+            <label for="@chekBoxId" style=" height: 40px;" >
+                <div class="smallAvatar" style="background: url(@avatarUrl) no-repeat center center; background-size: cover; float:left;"></div>
+                <div class="ellipsis" style="float:none;">&nbsp;@user.GetFullName()</div>
+            </label>
+
+        }
+    </div>
+}
+
 @helper OnLineStatusIcon(bool onLine, bool blocked = false)
 {
     var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
@@ -168,18 +194,18 @@
 
 @helper UserTypeIcon(int genderId)
 {
-var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
-var icon = "";
-var tooltip = "";
-switch (genderId)
-{
-    case 1: icon = "~/Content/UI-icons/admin.png"; tooltip = "Administrateur"; break;
-    case 2: icon = "~/Content/UI-icons/power user.png"; tooltip = "Usager prévilégié"; break;
-    default: icon = "~/Content/UI-icons/user.png"; tooltip = "Usager standard"; break;
-}
+    var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+    var icon = "";
+    var tooltip = "";
+    switch (genderId)
+    {
+        case 1: icon = "~/Content/UI-icons/admin.png"; tooltip = "Administrateur"; break;
+        case 2: icon = "~/Content/UI-icons/power user.png"; tooltip = "Usager prévilégié"; break;
+        default: icon = "~/Content/UI-icons/user.png"; tooltip = "Usager standard"; break;
+    }
 
-var iconUrl = Url.Content(icon);
-    <img src="@iconUrl" class="medium_icon" title="@tooltip"/>
+    var iconUrl = Url.Content(icon);
+    <img src="@iconUrl" class="medium_icon" title="@tooltip" />
 }
 
 @helper GenderIcon(int genderId)

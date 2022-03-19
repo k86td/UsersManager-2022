@@ -336,5 +336,29 @@ namespace UsersManager.Controllers
             return RedirectToAction("UserList");
         }
         #endregion
+
+        #region
+    [AdminAccess]
+    public ActionResult GroupEmail()
+    {
+        ViewBag.SelectedUsers = new List<int>();
+        ViewBag.Users = DB.SortedUsers();
+        return View(new GroupEmail());
+    }
+    [HttpPost]
+    public ActionResult GroupEmail(GroupEmail groupEmail, List<int> SelectedUsers)
+    {
+        if (ModelState.IsValid)
+        {
+            groupEmail.SelectedUsers = SelectedUsers;
+            groupEmail.Send(DB);
+            return RedirectToAction("UserList");
+        }
+        ViewBag.SelectedUsers = SelectedUsers;
+        ViewBag.Users = DB.SortedUsers();
+        return View(groupEmail);
+    }
+
+        #endregion
     }
 }
