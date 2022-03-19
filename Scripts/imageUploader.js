@@ -92,29 +92,24 @@ $(document).ready(() => {
     });
 
     $(".UploadedImage").on('dragenter', function (e) {
-        console.log('drag enter')
         $(this).css('border', '2px solid blue');
     });
 
     $(".UploadedImage").on('dragover', function (e) {
-        console.log('drag over')
         $(this).css('border', '2px solid blue');
         e.preventDefault();
     });
 
     $(".UploadedImage").on('dragleave', function (e) {
-        console.log('drag over')
         $(this).css('border', '2px solid white');
         e.preventDefault();
     });
 
     $(".UploadedImage").on('drop', function (e) {
         var image = e.originalEvent.dataTransfer.files[0];
-        console.log(image)
         $(this).css('background', '#D8F9D3');
         e.preventDefault();
         let id = $(this).attr('id').split('_')[0];
-        console.log(id);
         let UploadedImage = document.querySelector('#' + id + '_UploadedImage');
         let waitingImage = UploadedImage.getAttribute("waitingImage");
         let ImageData = document.querySelector('#' + id);
