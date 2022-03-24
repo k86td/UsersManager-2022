@@ -1,0 +1,37 @@
+﻿@model IEnumerable<UsersManager.Models.Login>
+@{
+    int currentDay = 0;
+
+    foreach (var login in Model)
+    {
+        if (login.LoginDate.Day != currentDay)
+        {
+            currentDay = login.LoginDate.Day;
+            string deleteAction = "DeleteJournalDay" + "?day=" + login.LoginDate.ToShortDateString().Trim();
+            <hr />
+            <div style="display:grid; grid-template-columns:80px 30px">
+                @login.LoginDate.ToShortDateString()
+                @Helper.GlyphiconConfirmAction(deleteAction, "glyphicon-remove-circle", "Effacer la journée du " + login.LoginDate.ToShortDateString())
+            </div>
+            <hr />
+        }
+        <div style="display: grid; grid-template-columns: 250px 40px 60px ">
+            <div>
+                @Helper.AvatarUser(login.User)
+            </div>
+            <div>
+                @login.LoginDate.ToShortTimeString()
+            </div>
+
+            @if (login.LoginDate != login.LogoutDate)
+            {
+                <div>&nbsp;:&nbsp;@login.LogoutDate.ToShortTimeString()</div>
+            }
+            else
+            {
+                <div>&nbsp;:&nbsp; -</div>
+            }
+        </div>
+
+    }
+}

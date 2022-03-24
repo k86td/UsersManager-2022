@@ -108,14 +108,13 @@ namespace UsersManager.Models
 
         public static bool RemoveUser(this UsersDBEntities DB, int userId)
         {
-            User user = DB.Users.Find(userId);
-            if (user != null)
+            User userToDelete = DB.Users.Find(userId);
+            if (userToDelete != null)
             {
-                user.RemoveAvatar();
-                User userToDelete = DB.Users.Find(user.Id);
+                OnlineUsers.RemoveUser(userToDelete.Id);
+                userToDelete.RemoveAvatar();
                 DB.Users.Remove(userToDelete);
                 DB.SaveChanges();
-                OnlineUsers.RenewSerialNumber();
                 return true;
             }
             return false;
@@ -226,7 +225,20 @@ namespace UsersManager.Models
             return login;
         }
 
-        public static bool UpdateLogout(this UsersDBEntities DB, int userId)
+        public static bool UpdateLogout(this UsersDBEntities DB, int loginId)
+        {
+            Login login = DB.Logins.Find(loginId);
+            if (login != null)
+            {
+                login.LogoutDate = DateTime.Now;
+                DB.Entry(login).State = EntityState.Modified;
+                DB.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public static bool UpdateLogoutByUserId(this UsersDBEntities DB, int userId)
         {
             Login login = DB.Logins.Where(l => l.UserId == userId).OrderByDescending(l => l.LoginDate).FirstOrDefault();
             if (login != null)

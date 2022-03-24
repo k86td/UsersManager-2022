@@ -88,13 +88,18 @@ namespace UsersManager.Models
         }
         public static void RemoveSessionUser()
         {
-            if (CurrentUserId != 0)
+            RemoveUser(CurrentUserId);
+        }
+        public static void RemoveUser(int userId)
+        {
+            if (userId != 0)
             {
-                UsersId.Remove(CurrentUserId);
+                UsersId.Remove(userId);
                 CurrentUserId = 0;
                 RenewSerialNumber();
             }
         }
+
         public static User GetSessionUser()
         {
             if (CurrentUserId != 0)

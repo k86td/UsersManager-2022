@@ -11,7 +11,7 @@ namespace UsersManager.Models
     {
         public User()
         {
-            this.Logins = new HashSet<Login>();
+            //this.Logins = new HashSet<Login>();
             CreationDate = DateTime.Now;
             UserTypeId = 3; // User
             Verified = false;
@@ -52,7 +52,7 @@ namespace UsersManager.Models
         {
             if (showGender)
             {
-                if (Gender.Name != "")
+                if (Gender.Name != "Neutre")
                     return Gender.Name + " " + LastName;
             }
             return FirstName + " " + LastName;

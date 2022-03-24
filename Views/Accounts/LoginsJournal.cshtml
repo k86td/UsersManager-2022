@@ -2,41 +2,24 @@
 
 @{
     ViewBag.Title = "LoginsJournal";
-    int currentDay = 0;
 }
 
 <h2>Journal des connexions</h2>
 
-@foreach (var item in Model)
-{
-    if (item.LoginDate.Day != currentDay)
-    {
-        currentDay = item.LoginDate.Day;
-        string deleteAction = "DeleteJournalDay" + "?day=" + item.LoginDate.ToShortDateString().Trim();
-        <hr />
-        <div style="display:grid; grid-template-columns:80px 30px">
-            @item.LoginDate.ToShortDateString()
-            @Helper.GlyphiconConfirmAction(deleteAction, "glyphicon-remove-circle", "Effacer la journée du " + item.LoginDate.ToShortDateString())
-        </div>
-        <hr />
-    }
-    <div style="display: grid; grid-template-columns: 250px 40px 60px ">
-        <div>
-            @Helper.AvatarUser(item.User)
-        </div>
-        <div>
-            @item.LoginDate.ToShortTimeString()
-        </div>
+<div id="LoginsListContainer">
+    @{ Html.RenderAction("GetLoginsList", new { forceRefresh = true }); }
+</div>
 
-        @if (item.LoginDate != item.LogoutDate)
-        {
-            <div>&nbsp;:&nbsp;@item.LogoutDate.ToShortTimeString()</div>
-        }
-        else
-        {
-            <div>&nbsp;:&nbsp; -</div>
-        }
-    </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/partialRefresh")
+
+    <script defer>
+
+        $(() => {
+
+            installPartialRefresh("@Url.Action("GetLoginsList")", "LoginsListContainer", 3 /*secondes*/);
+        });
+    </script>
 }
-
 

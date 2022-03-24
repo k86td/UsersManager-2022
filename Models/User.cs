@@ -15,7 +15,7 @@ namespace UsersManager.Models
     public partial class User
     {
         public int Id { get; set; }
-        public int UserTypeId { get; set; }
+        public int UserTypeId { get; set; } 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -28,6 +28,7 @@ namespace UsersManager.Models
     
         public virtual Gender Gender { get; set; }
         public virtual UserType UserType { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Login> Logins { get; set; }
     }

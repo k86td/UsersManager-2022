@@ -84,7 +84,7 @@ legend {
     float: left;
 }
 
-.userListContainer {
+.userContainer {
     display: grid;
     grid-template-columns: 220px 100px 80px 80px 120px 80px 80px 80px;
     height: 60px;
@@ -110,4 +110,8 @@ legend {
 
 .UploadedImage:hover {
     border: 2px solid blue;
+}
+
+.glyphiconStyle {
+    font-size:18px
 }

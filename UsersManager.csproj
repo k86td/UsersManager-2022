@@ -239,6 +239,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\PartialRefresh.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -270,6 +271,8 @@
     <Content Include="Views\Accounts\ResetPasswordError.cshtml" />
     <Content Include="Views\Accounts\GroupEmail.cshtml" />
     <Content Include="Views\Accounts\LoginsJournal.cshtml" />
+    <Content Include="Views\Accounts\GetUsersList.cshtml" />
+    <Content Include="Views\Accounts\GetLoginsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

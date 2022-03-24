@@ -298,7 +298,7 @@ namespace UsersManager.Controllers
                     return View(loginCredential);
                 }
                 OnlineUsers.AddSessionUser(user.Id);
-                DB.AddLogin(user.Id);
+                Session["currentLoginId"] = DB.AddLogin(user.Id).Id;
                 return RedirectToAction("Index", "Application");
             }
             return View(loginCredential);
@@ -306,7 +306,7 @@ namespace UsersManager.Controllers
 
         public ActionResult Logout()
         {
-            DB.UpdateLogout(OnlineUsers.GetSessionUser().Id);
+            DB.UpdateLogout((int)Session["currentLoginId"]);
             OnlineUsers.RemoveSessionUser();
             return RedirectToAction("Login");
         }
@@ -320,7 +320,7 @@ namespace UsersManager.Controllers
         [AdminAccess]
         public ActionResult UserList()
         {
-            return View(DB.Users);
+            return View();
         }
 
         [AdminAccess]
@@ -329,7 +329,7 @@ namespace UsersManager.Controllers
             User user = DB.FindUser(userid);
             user.Blocked = blocked;
             DB.Update_User(user);
-            return RedirectToAction("UserList");
+            return null;
         }
 
         [AdminAccess]
@@ -337,6 +337,15 @@ namespace UsersManager.Controllers
         {
             DB.RemoveUser(id);
             return RedirectToAction("UserList");
+        }
+
+        public ActionResult GetUsersList(bool forceRefresh = false)
+        {
+            if (forceRefresh || OnlineUsers.NeedUpdate())
+            {
+                return PartialView(DB.Users);
+            }
+            return null;
         }
         #endregion
 
@@ -366,7 +375,16 @@ namespace UsersManager.Controllers
         #region Login journal
         public ActionResult LoginsJournal()
         {
-            return View(DB.Logins.OrderByDescending(l => l.LoginDate));
+            return View();
+        }
+
+        public ActionResult GetLoginsList(bool forceRefresh = false)
+        {
+            if (forceRefresh || OnlineUsers.NeedUpdate())
+            {
+                return PartialView(DB.Logins.OrderByDescending(l => l.LoginDate));
+            }
+            return null;
         }
 
         public ActionResult DeleteJournalDay(string day)

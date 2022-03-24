@@ -3,8 +3,8 @@
     ViewBag.Title = "EmailGroup";
 }
 
-<h2>EmailGroup</h2>
-
+<h2>Envoi de courriel</h2>
+<hr />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -33,9 +33,7 @@
 
     </fieldset>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Envoyer" class="btn btn-default" />
-        </div>
+        <input type="submit" value="Envoyer" class="btn btn-default" />
     </div>
 }
 
