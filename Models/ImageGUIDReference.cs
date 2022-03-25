@@ -125,7 +125,7 @@ namespace UsersManager.Models
                     GUID = Guid.NewGuid().ToString();
                     imagePath = HttpContext.Current.Server.MapPath(GetURL(GUID));
                     // make sure new GUID does not already exists 
-                } while (File.Exists(imagePath));
+                } while (File.Exists(imagePath)); 
 
                 SaveImageFile(GUID, ImageData);
                 if (HasThumbnail)
