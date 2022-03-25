@@ -17,7 +17,7 @@ namespace UsersManager.Models
                 return (List<int>)HttpRuntime.Cache["OnLineUsers"];
             }
         }
-        private static int CurrentUserId
+        public static int CurrentUserId
         {
             get
             {

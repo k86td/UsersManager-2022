@@ -6,7 +6,7 @@
     {
         if (login.LoginDate.Day != currentDay)
         {
-            currentDay = login.LoginDate.Day;
+            currentDay = login.LoginDate.Day; ///  /DeleteJournalDay?day=2022-03-24 DateTime dayToDelete = DateTime.Parse(day)
             string deleteAction = "DeleteJournalDay" + "?day=" + login.LoginDate.ToShortDateString().Trim();
             <hr />
             <div style="display:grid; grid-template-columns:80px 30px">
