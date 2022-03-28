@@ -202,6 +202,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ImagesData\Avatars\0e99d0c8-febb-4b40-ac49-7615fcf00d36.Jpeg" />
+    <Content Include="ImagesData\Avatars\321e0916-159b-4917-b198-429de8b88f5d.Jpeg" />
+    <Content Include="ImagesData\Avatars\68a446cd-638e-4d32-8c09-48fa0f7177fe.Jpeg" />
+    <Content Include="ImagesData\Avatars\92a1d624-503b-4630-b573-683d6574fce1.Jpeg" />
+    <Content Include="ImagesData\Avatars\c8ee1674-92ed-4e6e-b922-a93a249ea07b.Jpeg" />
     <Content Include="ImagesData\Avatars\no_avatar.png" />
     <Content Include="ImagesData\Loading_icon.gif" />
     <Content Include="Models\UsersDBEntities.Context.tt">
