@@ -30,7 +30,6 @@ namespace UsersManager.Models
             this.HasThumbnail = hasThumbnail;
         }
 
-
         public String MakeUrl(String GUID, bool thumbnail = false)
         {
             String url;

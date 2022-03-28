@@ -6,6 +6,10 @@ using System.Web;
 
 namespace UsersManager.Models
 {
+
+
+    public static ImageGUIDReference AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png", false);
+      
     [MetadataType(typeof(UserView))]
     public partial class User
     {
@@ -16,15 +20,8 @@ namespace UsersManager.Models
             UserTypeId = 3; // User
             Verified = false;
             Blocked = false;
-            InitAvatarManagement();
         }
 
-        public void InitAvatarManagement()
-        {
-            AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png");
-            AvatarReference.MaxSize = 512;
-            AvatarReference.HasThumbnail = false;
-        }
         public String GetAvatarURL()
         {
             return AvatarReference.GetURL(Avatar, false);
@@ -40,7 +37,7 @@ namespace UsersManager.Models
 
         public string ConfirmEmail { get; set; }
         public string ConfirmPassword { get; set; }
-        private ImageGUIDReference AvatarReference { get; set; }
+        private static ImageGUIDReference AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png", false);
 
         [Display(Name = "Avatar")]
         public string AvatarImageData { get; set; }
