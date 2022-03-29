@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace UsersManager.Models
 {
     public class GroupEmail
     {
         public List<int> SelectedUsers { get; set; }
+
         [Display(Name = "Sujet"), Required(ErrorMessage = "Obligatoire")]
         public string Subject { get; set; }
+
         [Display(Name = "Message"), Required(ErrorMessage = "Obligatoire")]
         public string Message { get; set; }
 
