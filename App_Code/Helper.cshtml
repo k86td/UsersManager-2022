@@ -180,6 +180,13 @@
     var iconUrl = Url.Content(icon);
     <img src="@iconUrl" class="small_icon" />
 }
+@helper TimeOutIcon()
+{
+    var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+
+    var iconUrl = Url.Content("~/Content/UI-icons/timeout.png");
+    <img src="@iconUrl" class="small_icon" />
+}
 
 @helper Checked(bool checkStatus)
 {

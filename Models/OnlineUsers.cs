@@ -8,7 +8,7 @@ namespace UsersManager.Models
 {
     public static class OnlineUsers
     {
-        private static List<int> UsersId
+        public static List<int> UsersId
         {
             get
             {

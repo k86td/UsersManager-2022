@@ -382,6 +382,7 @@ namespace UsersManager.Controllers
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
             {
+                ViewBag.LoggedUsersId = new List<int>(OnlineUsers.UsersId);
                 return PartialView(DB.Logins.OrderByDescending(l => l.LoginDate));
             }
             return null;

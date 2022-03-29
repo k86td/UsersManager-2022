@@ -6,10 +6,6 @@ using System.Web;
 
 namespace UsersManager.Models
 {
-
-
-    public static ImageGUIDReference AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png", false);
-      
     [MetadataType(typeof(UserView))]
     public partial class User
     {

@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<UsersManager.Models.Login>
 @{
     int currentDay = 0;
+    var loggedUsersId = (List<int>)ViewBag.LoggedUsersId;
 
     foreach (var login in Model)
     {
@@ -16,22 +17,29 @@
             <hr />
         }
         <div style="display: grid; grid-template-columns: 250px 40px 60px ">
-            <div>
+            <div style="margin-top:2px;">
                 @Helper.AvatarUser(login.User)
             </div>
-            <div>
+            <div style="margin-top:2px;">
                 @login.LoginDate.ToShortTimeString()
             </div>
 
             @if (login.LoginDate != login.LogoutDate)
             {
-                <div>&nbsp;:&nbsp;@login.LogoutDate.ToShortTimeString()</div>
+                <div style="margin-top:2px;">&nbsp;:&nbsp;@login.LogoutDate.ToShortTimeString()</div>
             }
             else
             {
-                <div>&nbsp;:&nbsp; -</div>
+                if (loggedUsersId.Contains(login.User.Id))
+                {
+                    loggedUsersId.Remove(login.User.Id);
+                    <div title="Est en ligne en ce moment">&nbsp;:&nbsp; @Helper.OnLineStatusIcon(true, false)</div>
+                }
+                else
+                {
+                    <div title="Session expirée">&nbsp;:&nbsp; @Helper.TimeOutIcon()</div>
+                }
             }
         </div>
-
     }
 }
