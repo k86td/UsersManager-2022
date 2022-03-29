@@ -1,7 +1,10 @@
-﻿// https://stackoverflow.com/questions/61319169/visual-studio-warning-eslint-failed-to-load-config-defaults-configurations-e
+﻿function installPartialRefresh(serviceURL, divContainerId, refreshRate, callBack = null) {
+    // intallation of partial refresh
+    setInterval(() => { DoPartialRefresh(serviceURL, divContainerId, callBack); }, refreshRate * 1000);
+}
 
 function DoPartialRefresh(serviceURL, divContainerId, callBack = null) {
-    console.log("posts partial refresh");
+    // posts partial refresh
     $.ajax({
         url: serviceURL,
         dataType: "html",
@@ -14,13 +17,8 @@ function DoPartialRefresh(serviceURL, divContainerId, callBack = null) {
     })
 }
 
-function installPartialRefresh(serviceURL, divContainerId, refreshRate, callBack = null) {
-    console.log("intallation of partial refresh");
-    setInterval(() => { DoPartialRefresh(serviceURL, divContainerId, callBack); }, refreshRate * 1000);
-}
-
 function ajaxActionCall(actionLink) {
-    console.log("Ajax Action Call to: " + actionLink);
+    // Ajax Action Call to actionLink
     $.ajax({
         url: actionLink,
         method: 'GET',
@@ -30,3 +28,4 @@ function ajaxActionCall(actionLink) {
     });
     confirmActionLink = "";
 }
+

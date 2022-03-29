@@ -231,6 +231,7 @@
       <DependentUpon>UsersDBEntities.edmx</DependentUpon>
     </Content>
     <Content Include="App_Code\Helper.cshtml" />
+    <Content Include="Rafraîchissement partiel périodique.pdf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\FormUtilities.js" />
     <Content Include="Scripts\imageUploader.js" />

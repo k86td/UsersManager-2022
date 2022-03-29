@@ -24,14 +24,13 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/partialRefresh")
 
-    <script defer>
-
+    <script>
         $(() => {
             UpdateCheckboxChangeCallback();
             installPartialRefresh("@Url.Action("GetUsersList")", "UsersListContainer", 3 /*secondes*/, UpdateCheckboxChangeCallback);
            
             function UpdateCheckboxChangeCallback() {
-                console.log("renew checkbox change call back")
+                // renew checkbox change call back
                 $(".CB_Blocked").change(
                     function () {
                         let userid = this.id.split('_')[1];
