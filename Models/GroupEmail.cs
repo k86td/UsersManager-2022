@@ -21,8 +21,8 @@ namespace UsersManager.Models
                 foreach (int userId in SelectedUsers)
                 {
                     User user = DB.Users.Find(userId);
-                    string message = Message.Replace("[Nom]", user.GetFullName(true)).Replace("\r\n", @"<br>");
-                    Gmail.SMTP.SendEmail(user.GetFullName(), user.Email, Subject, message);
+                    string personalizedMessage = Message.Replace("[Nom]", user.GetFullName(true)).Replace("\r\n", @"<br>");
+                    Gmail.SMTP.SendEmail(user.GetFullName(), user.Email, Subject, personalizedMessage);
                 }
             }
         }
