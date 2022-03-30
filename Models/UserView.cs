@@ -18,6 +18,9 @@ namespace UsersManager.Models
             Blocked = false;
         }
 
+        private static ImageGUIDReference AvatarReference = 
+            new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png", false);
+
         public String GetAvatarURL()
         {
             return AvatarReference.GetURL(Avatar, false);
@@ -33,7 +36,6 @@ namespace UsersManager.Models
 
         public string ConfirmEmail { get; set; }
         public string ConfirmPassword { get; set; }
-        private static ImageGUIDReference AvatarReference = new ImageGUIDReference(@"/ImagesData/Avatars/", @"no_avatar.png", false);
 
         [Display(Name = "Avatar")]
         public string AvatarImageData { get; set; }

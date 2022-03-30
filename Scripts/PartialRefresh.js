@@ -26,6 +26,5 @@ function ajaxActionCall(actionLink) {
             console.log("Result: " + data);
         }
     });
-    confirmActionLink = "";
 }
 
