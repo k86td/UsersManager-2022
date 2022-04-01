@@ -339,7 +339,7 @@ namespace UsersManager.Controllers
             return RedirectToAction("UserList");
         }
 
-        [AdminAccess(false)]
+        [AdminAccess(false)] // RefreshTimout = false otherwise periodical refresh with lead to never timed out session
         public ActionResult GetUsersList(bool forceRefresh = false)
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
@@ -379,7 +379,7 @@ namespace UsersManager.Controllers
         {
             return View();
         }
-        [AdminAccess(false)]
+        [AdminAccess(false)] // RefreshTimout = false otherwise periodical refresh with lead to never timed out session
         public ActionResult GetLoginsList(bool forceRefresh = false)
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
