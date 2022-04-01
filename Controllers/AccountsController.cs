@@ -339,6 +339,7 @@ namespace UsersManager.Controllers
             return RedirectToAction("UserList");
         }
 
+        [AdminAccess(false)]
         public ActionResult GetUsersList(bool forceRefresh = false)
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
@@ -373,11 +374,12 @@ namespace UsersManager.Controllers
         #endregion
 
         #region Login journal
+        [AdminAccess]
         public ActionResult LoginsJournal()
         {
             return View();
         }
-
+        [AdminAccess(false)]
         public ActionResult GetLoginsList(bool forceRefresh = false)
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
@@ -387,7 +389,7 @@ namespace UsersManager.Controllers
             }
             return null;
         }
-
+        [AdminAccess]
         public ActionResult DeleteJournalDay(string day)
         {
             try
@@ -395,7 +397,7 @@ namespace UsersManager.Controllers
                 DateTime date = DateTime.Parse(day);
                 DB.DeleteLoginsJournalDay(date);
             }
-            catch (Exception ) {  }
+            catch (Exception) { }
             return RedirectToAction("LoginsJournal");
         }
         #endregion
