@@ -135,6 +135,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmailView.cs" />
+    <Compile Include="Models\FriendShip.cs">
+      <DependentUpon>UsersDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FriendShipState.cs" />
     <Compile Include="Models\GroupEmail.cs" />
     <Compile Include="Models\ImageGUIDReference.cs" />
     <Compile Include="Models\Login.cs">

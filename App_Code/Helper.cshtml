@@ -34,6 +34,14 @@
     </select>
 }
 
+@helper GlyphiconNoAction(string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom")
+{
+    <span class="glyphicon glyphiconStyle @glyphiconClass"
+          title="@TooltipMessage"
+          data-placement="@ToolTipPlacement">
+    </span>
+}
+
 @helper GlyphiconAction(string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom")
 {
     var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
@@ -52,6 +60,19 @@
     var root = Url.Action("/");
     var action = root + Action;
     <div onclick='bootbox.confirm("@TooltipMessage", function(result){ if (result) window.location = "@action"; })'>
+        <span class="glyphicon glyphiconStyle @glyphiconClass"
+              title="@TooltipMessage"
+              data-placement="@ToolTipPlacement">
+        </span>
+    </div>
+}
+
+@helper GlyphiconConfirmAjaxAction(string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom")
+{
+    var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+    var root = Url.Action("/");
+    var action = root + Action;
+    <div onclick='bootbox.confirm("@TooltipMessage", function(result) { if (result) ajaxActionCall("@action") })'>
         <span class="glyphicon glyphiconStyle @glyphiconClass"
               title="@TooltipMessage"
               data-placement="@ToolTipPlacement">

@@ -344,7 +344,7 @@ namespace UsersManager.Controllers
         {
             if (forceRefresh || OnlineUsers.NeedUpdate())
             {
-                return PartialView(DB.Users);
+                return PartialView(DB.SortedUsers());
             }
             return null;
         }
