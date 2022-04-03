@@ -120,7 +120,10 @@ legend {
     color: green;
 }
 
-
 .glyphicon-red {
     color: red;
+}
+
+.glyphicon-active {
+    cursor: pointer;
 }
