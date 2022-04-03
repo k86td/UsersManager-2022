@@ -116,6 +116,11 @@ legend {
     font-size:18px
 }
 
-div2 {
-    border:1px solid red;
+.glyphicon-green {
+    color: green;
+}
+
+
+.glyphicon-red {
+    color: red;
 }

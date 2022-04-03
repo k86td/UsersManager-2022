@@ -346,28 +346,28 @@ namespace UsersManager.Models
         }
         public static bool NotFriends(this UsersDBEntities DB, int userId, int targetUserId)
         {
-            FriendShip friendShipA = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
-            FriendShip friendShipB = DB.FriendShips.Where(f => (f.UserId == targetUserId && f.TargetUserId == userId)).FirstOrDefault();
-            return (friendShipA == null && friendShipB == null);
+            FriendShip friendShipOfUser = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
+            FriendShip friendShipOfTargetUser = DB.FriendShips.Where(f => (f.UserId == targetUserId && f.TargetUserId == userId)).FirstOrDefault();
+            return (friendShipOfUser == null && friendShipOfTargetUser == null);
         }
 
         private static int FriendShipStatus(this UsersDBEntities DB, int userId, int targetUserId)
         {
-            FriendShip friendShipA = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
-            FriendShip friendShipB = DB.FriendShips.Where(f => (f.UserId == targetUserId && f.TargetUserId == userId)).FirstOrDefault();
-            if (friendShipA != null)
+            FriendShip friendShipOfUser = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
+            FriendShip friendShipOfTargetUser = DB.FriendShips.Where(f => (f.UserId == targetUserId && f.TargetUserId == userId)).FirstOrDefault();
+            if (friendShipOfUser != null)
             {
-                if (friendShipA.Accepted)
+                if (friendShipOfUser.Accepted)
                     return 1; // friend
-                if (friendShipA.Declined)
+                if (friendShipOfUser.Declined)
                     return 2; // targetUser declined
                 return 3; // request friendship pending
             }
-            if (friendShipB != null)
+            if (friendShipOfTargetUser != null)
             {
-                if (friendShipB.Accepted)
+                if (friendShipOfTargetUser.Accepted)
                     return 1; // friend
-                if (friendShipB.Declined)
+                if (friendShipOfTargetUser.Declined)
                     return 4; // user declined
                 return 5; // request friendship offer
             }
@@ -393,5 +393,6 @@ namespace UsersManager.Models
             DB.SaveChanges();
             return true;
         }
+
     }
 }
