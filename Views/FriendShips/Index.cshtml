@@ -1,4 +1,4 @@
-﻿@model UsersManager.Models.FriendShipState
+﻿@model IEnumerable<UsersManager.Models.FriendShipState>
 
 @{
     ViewBag.Title = "Index";
@@ -6,3 +6,16 @@
 
 <h2>Amitiés</h2>
 
+<hr/>
+
+<div id="refreshable_friends">
+    @{ Html.RenderAction("GetFriendShips"); }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/partialRefresh")
+
+    <script defer>
+        installPartialRefresh("@Url.Action("GetFriendShips")", "refreshable_friends", 3, null)
+    </script>
+}

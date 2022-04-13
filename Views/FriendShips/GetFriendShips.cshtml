@@ -1,0 +1,16 @@
+﻿@model IEnumerable<UsersManager.Models.FriendShipState>
+
+<div class="container">
+    @foreach (var item in Model)
+    {
+        <div class="row">
+            <div class="col-lg-6">
+                @Helper.AvatarUser(item.TargetUser)
+            </div>
+            <div class="col-lg-6">
+                @Helper.DisplayFriendShipStatus(item.Status)
+            </div>
+        </div>
+    }
+</div>
+

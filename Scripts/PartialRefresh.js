@@ -4,6 +4,8 @@
 }
 
 function DoPartialRefresh(serviceURL, divContainerId, callBack = null) {
+    console.log("Did a partial refresh!");
+
     // posts partial refresh
     $.ajax({
         url: serviceURL,

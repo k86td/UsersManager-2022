@@ -241,4 +241,49 @@ namespace UsersManager.Models
             return base.AuthorizeCore(httpContext);
         }
     }
+
+    public static class FriendShipAccess
+    {
+        public static string _serial;
+
+        public static string Serial
+        {
+            get
+            {
+                if (_serial is null)
+                    _serial = new Guid().ToString();
+
+                return _serial;
+            }
+
+            set
+            {
+                _serial = value;
+            }
+        }
+
+        public static bool RenewSerial ()
+        {
+            Serial = new Guid().ToString();
+            return true;
+        }
+
+        public static bool NeedUpdate ()
+        {
+            if (HttpContext.Current.Session["FriendshipSerial"] is null)
+            {
+                HttpContext.Current.Session["FriendshipSerial"] = Serial;
+                return true;
+            }
+
+            string currentSerial = HttpContext.Current.Session["FriendshipSerial"].ToString();
+            if (currentSerial == Serial)
+            {
+                HttpContext.Current.Session["FriendshipSerial"] = Serial;
+                return false;
+            }
+
+            return true;
+        }
+    }
 }

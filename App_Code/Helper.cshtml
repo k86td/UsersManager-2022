@@ -270,3 +270,13 @@
     var iconUrl = Url.Content(icon);
     <img src="@iconUrl" class="small_icon" />
 }
+
+@helper DisplayFriendShipStatus(int statusId)
+{
+    switch (statusId)
+    {
+        case 0:
+            @Helper.GlyphiconAjaxControllerAction("FriendShips", "RequestFriendShip", "glyphicon glyphicon-plus", "Ajouter comme ami")
+            break;
+    }
+}
