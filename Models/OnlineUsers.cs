@@ -241,7 +241,6 @@ namespace UsersManager.Models
             return base.AuthorizeCore(httpContext);
         }
     }
-
     public static class FriendShipAccess
     {
         public static string _serial;
@@ -264,7 +263,7 @@ namespace UsersManager.Models
 
         public static bool RenewSerial ()
         {
-            Serial = new Guid().ToString();
+            Serial = Guid.NewGuid().ToString();
             return true;
         }
 

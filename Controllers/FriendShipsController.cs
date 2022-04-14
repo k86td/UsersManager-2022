@@ -14,6 +14,7 @@ namespace UsersManager.Controllers
         // GET: FriendShips
         public ActionResult Index()
         {
+            FriendShipAccess.RenewSerial();
             return View();
         }
 
@@ -27,19 +28,84 @@ namespace UsersManager.Controllers
             return null;
         }
 
+        // TODO validate that the users you want to request friendship doesn't already have pending requests
+
         /// <summary>
         /// Requests a friendship for the user id given in parameters
         /// </summary>
         /// <param name="id">User Id that you wish to request a friendship</param>
         /// <returns>Redirection to Index page</returns>
-        public ActionResult RequestFriendShip (int id)
+        public bool RequestFriendShip (int targetUserId)
         {
             if (OnlineUsers.CurrentUserId != 0)
             {
-                DB.Add_FiendShipRequest(OnlineUsers.CurrentUserId, id);
+                var friendship = DB.Add_FiendShipRequest(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
             }
 
-            return RedirectToAction("Index");
+            return false;
+        }
+
+        public bool CancelFriendShip (int targetUserId)
+        {
+            if (OnlineUsers.CurrentUserId != 0)
+            {
+                DB.Remove_FiendShipRequest(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool AcceptFriendShip (int targetUserId)
+        {
+            if (OnlineUsers.CurrentUserId != 0)
+            {
+                DB.Accept_FriendShip(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DeclineFriendShip (int targetUserId)
+        {
+            if (OnlineUsers.CurrentUserId != 0)
+            {
+                DB.Decline_FriendShip(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DeleteFriendShip (int targetUserId)
+        {
+            if (OnlineUsers.CurrentUserId != 0)
+            {
+                DB.Remove_FiendShipRequest(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool ResetDeclinedFriendShip (int targetUserId)
+        {
+            if (OnlineUsers.CurrentUserId != 0)
+            {
+                DB.Remove_FiendShipRequest(OnlineUsers.CurrentUserId, targetUserId);
+                DB.Add_FiendShipRequest(OnlineUsers.CurrentUserId, targetUserId);
+                FriendShipAccess.RenewSerial();
+                return true;
+            }
+
+            return false;
         }
     }
 }

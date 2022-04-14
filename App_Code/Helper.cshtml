@@ -69,11 +69,12 @@
     </div>
 }
 
-@helper GlyphiconAjaxControllerAction(string controller, string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom")
+@helper GlyphiconAjaxControllerAction(string controller, string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom", object routeParameters = null, string callback = null)
 {
+
     glyphiconClass += " glyphicon-active";
     var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
-    <div onclick='ajaxActionCall("@Url.Action(Action, controller)")'>
+    <div onclick='ajaxActionCall("@Url.Action(Action, controller, routeParameters)", "@callback")'>
         <div style="margin-top:12px;margin-left:12px">
             <span class="glyphicon glyphiconStyle @glyphiconClass"
                   title="@TooltipMessage"
@@ -83,12 +84,11 @@
     </div>
 }
 
-@helper GlyphiconConfirmAjaxAction(string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom")
+@helper GlyphiconConfirmAjaxAction(string controllerName, string Action, string glyphiconClass, string TooltipMessage, string ToolTipPlacement = "bottom", object routeParameters = null)
 {
     glyphiconClass += " glyphicon-active";
     var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
-    var root = Url.Action("/");
-    var action = root + Action;
+    var action = Url.Action(Action, controllerName, routeParameters);
     <div onclick='bootbox.confirm("@TooltipMessage", function(result) { if (result) ajaxActionCall("@action") })'>
         <span class="glyphicon glyphiconStyle @glyphiconClass"
               title="@TooltipMessage"
@@ -271,12 +271,45 @@
     <img src="@iconUrl" class="small_icon" />
 }
 
-@helper DisplayFriendShipStatus(int statusId)
+@helper DisplayFriendShipStatus(int targetUserId, int statusId)
 {
-    switch (statusId)
-    {
-        case 0:
-            @Helper.GlyphiconAjaxControllerAction("FriendShips", "RequestFriendShip", "glyphicon glyphicon-plus", "Ajouter comme ami")
-            break;
-    }
+    var DB = new UsersManager.Models.UsersDBEntities();
+    var targetUser = DB.Users.Where(el => el.Id == targetUserId).First();
+
+    <div class="row">
+
+        @switch (statusId)
+        {
+            case 0:
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "RequestFriendShip", "glyphicon glyphicon-plus", "Ajouter comme ami " + targetUser.GetFullName(), routeParameters: new { targetUserId = targetUserId })
+                break;
+
+            case 1:
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "DeleteFriendShip", "glyphicon glyphicon-minus-sign", "Retirer l'ami " + targetUser.GetFullName(), routeParameters: new { targetUserId = targetUserId })
+                break;
+
+            case 2:
+                @Helper.GlyphiconNoAction("glyphicon glyphicon-remove-sign", "Votre demande d'ami a ete refuser")
+                break;
+
+            case 3:
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "CancelFriendShip", "glyphicon glyphicon-minus", "Retirer la demande d'ami de " + targetUser.GetFullName(), routeParameters: new { targetUserId = targetUserId })
+                break;
+
+            case 4:
+                @Helper.GlyphiconNoAction("glyphicon glyphicon-remove", "Vous avez decliner cette demande d'ami")
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "ResetDeclinedFriendShip", "glyphicon glyphicon-plus", "Envoyer une demande d'ami", routeParameters: new { targetUserId = targetUserId })
+                break;
+
+            case 5:
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "AcceptFriendShip", "glyphicon glyphicon-ok", "Accepter la demande d'ami de " + targetUser.GetFullName(), routeParameters: new { targetUserId = targetUserId })
+                @Helper.GlyphiconConfirmAjaxAction("FriendShips", "DeclineFriendShip", "glyphicon glyphicon-remove", "Refuser la demande d'ami de" + targetUser.GetFullName(), routeParameters: new { targetUserId = targetUserId })
+                break;
+
+            case 6:
+                @Helper.GlyphiconNoAction("glyphicon glyphicon-ban-circle", "Cet utilisateur a ete bloquer par l'administrateur")
+                break;
+        }
+
+    </div>
 }

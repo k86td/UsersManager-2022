@@ -4,17 +4,19 @@
 }
 
 function DoPartialRefresh(serviceURL, divContainerId, callBack = null) {
-    console.log("Did a partial refresh!");
-
     // posts partial refresh
     $.ajax({
         url: serviceURL,
         dataType: "html",
         success: function (htmlContent) {
             if (htmlContent !== "") {
+                console.debug("Did successful partial refresh!");
+
                 $("#" + divContainerId).html(htmlContent);
                 if (callBack != null) callBack();
             }
+
+            console.debug("Successful, but nothing changed");
         }
     })
 }

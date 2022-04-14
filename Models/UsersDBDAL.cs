@@ -292,7 +292,7 @@ namespace UsersManager.Models
             }
             return true;
         }
-        public static bool Accept_FriendShip(this UsersDBEntities DB, int userId, int targetUserId)
+        public static bool Accept_FriendShip(this UsersDBEntities DB, int targetUserId, int userId)
         {
             FriendShip friendShip = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
             if (friendShip != null)
@@ -304,7 +304,7 @@ namespace UsersManager.Models
             }
             return false;
         }
-        public static bool Decline_FriendShip(this UsersDBEntities DB, int userId, int targetUserId)
+        public static bool Decline_FriendShip(this UsersDBEntities DB, int targetUserId, int userId)
         {
             FriendShip friendShip = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
             if (friendShip != null)
@@ -355,6 +355,12 @@ namespace UsersManager.Models
         {
             FriendShip friendShipOfUser = DB.FriendShips.Where(f => (f.UserId == userId && f.TargetUserId == targetUserId)).FirstOrDefault();
             FriendShip friendShipOfTargetUser = DB.FriendShips.Where(f => (f.UserId == targetUserId && f.TargetUserId == userId)).FirstOrDefault();
+
+            User targetUser = DB.Users.Where(el => el.Id == targetUserId).First();
+
+            if (targetUser.Blocked)
+                return 6;
+
             if (friendShipOfUser != null)
             {
                 if (friendShipOfUser.Accepted)
@@ -363,6 +369,7 @@ namespace UsersManager.Models
                     return 2; // targetUser declined
                 return 3; // request friendship pending
             }
+            
             if (friendShipOfTargetUser != null)
             {
                 if (friendShipOfTargetUser.Accepted)
@@ -371,6 +378,7 @@ namespace UsersManager.Models
                     return 4; // user declined
                 return 5; // request friendship offer
             }
+
             return 0; // not friend
         }
         public static List<FriendShipState> FriendShipsStatus(this UsersDBEntities DB, int userId)
@@ -386,10 +394,13 @@ namespace UsersManager.Models
             return friendShipsStatus;
         }
 
-        public static bool DeleteFriendShips(this UsersDBEntities DB, int userId)
+        public static bool DeleteFriendShips(this UsersDBEntities DB, int userId, int targetUserId)
         {
-            DB.FriendShips.RemoveRange(DB.FriendShips.Where(f => f.UserId == userId));
-            DB.FriendShips.RemoveRange(DB.FriendShips.Where(f => f.TargetUserId == userId));
+            // TODO reset this function to the ones we received
+
+            var range1 = DB.FriendShips.Where(f => f.UserId == userId || f.TargetUserId == targetUserId);
+
+            DB.FriendShips.RemoveRange(range1);
             DB.SaveChanges();
             return true;
         }

@@ -4,11 +4,11 @@
     @foreach (var item in Model)
     {
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-xs-8 col-md-8">
                 @Helper.AvatarUser(item.TargetUser)
             </div>
-            <div class="col-lg-6">
-                @Helper.DisplayFriendShipStatus(item.Status)
+            <div class="col-xs-4 col-md-4">
+                @Helper.DisplayFriendShipStatus(item.TargetUser.Id, item.Status)
             </div>
         </div>
     }
